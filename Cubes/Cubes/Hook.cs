@@ -24,7 +24,6 @@ namespace Cubes
 
         private Matrix world, view, projection;
 
-
         public Hook(Game game)
             : base(game)
         {

@@ -12,38 +12,33 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Cubes
 {
+    public interface IInputHandler
+    {
+        KeyboardState KeyboardState { get; }
+    };
+
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Crane : Microsoft.Xna.Framework.GameComponent
+    public class InputHandler : Microsoft.Xna.Framework.GameComponent, IInputHandler
     {
-        private Model theCraneModel;
-
-        private float rotation = 0.0f;
-
-        #region Get/Set methods
-        public float Rotation
+        private KeyboardState keyboardState;
+        public KeyboardState KeyboardState
         {
-            get { return rotation; }
-            set { rotation = value; }
+            get { return (keyboardState); }
         }
 
-        public Model Model
-        {
-            get { return theCraneModel; }
-            set { theCraneModel = value; }
-        }
-        #endregion
 
-        public Crane(Game game)
+        public InputHandler(Game game)
             : base(game)
         {
             // TODO: Construct any child components here
+            game.Services.AddService(typeof(IInputHandler), this);
         }
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
+        /// to run. This is where it can query for any required services and load content.
         /// </summary>
         public override void Initialize()
         {
@@ -59,17 +54,13 @@ namespace Cubes
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            KeyboardState ks = Keyboard.GetState();
 
-            if (ks.IsKeyDown(Keys.Right) || ks.IsKeyDown(Keys.D))
-            {
-                rotation += 0.03f;
-            }
-            if (ks.IsKeyDown(Keys.Left) || ks.IsKeyDown(Keys.A))
-            {
-                rotation -= 0.03f;
-            }
+            keyboardState = Keyboard.GetState();
 
+            if (keyboardState.IsKeyDown(Keys.Escape))
+            {
+                Game.Exit();
+            }
             base.Update(gameTime);
         }
     }

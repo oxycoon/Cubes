@@ -17,21 +17,30 @@ namespace Cubes
     public class CubesGame : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
+        GraphicsDevice device;
         SpriteBatch spriteBatch;
 
         private Crane theCrane;
         private Hook theHook;
         private List<Cube> theCubeList;
-
-        
+        private InputHandler input;
+        private Camera theCamera;
 
         private Matrix world, view, projection;
+        private Stack<Matrix> matrixStrack = new Stack<Matrix>();
 
+        BasicEffect effect;
+
+        private bool isFullScreen = false;
 
         public CubesGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            input = new InputHandler(this);
+            theCamera = new Camera(this);
+            theCrane = new Crane(this);
         }
 
         /// <summary>
@@ -43,9 +52,33 @@ namespace Cubes
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            initDevice();
+
+            this.IsMouseVisible = true;
 
             base.Initialize();
         }
+
+        #region Initialize methods
+        private void initDevice()
+        {
+            device = graphics.GraphicsDevice;
+
+            //Setter størrelse på framebuffer:
+            graphics.PreferredBackBufferWidth = 1400;
+            graphics.PreferredBackBufferHeight = 800;
+            graphics.IsFullScreen = isFullScreen;
+            graphics.ApplyChanges();
+
+            Window.Title = "Crane Simulator";
+
+            //Initialiserer Effect-objektet:
+            effect = new BasicEffect(graphics.GraphicsDevice);
+            effect.VertexColorEnabled = true;
+            effect.TextureEnabled = false;
+        }
+        #endregion
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -57,6 +90,7 @@ namespace Cubes
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            theCrane.Model = Content.Load<Model>("Crane");
         }
 
         /// <summary>
@@ -92,9 +126,33 @@ namespace Cubes
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
+
             // TODO: Add your drawing code here
+            view = theCamera.View;
+            projection = theCamera.Projection;
+
+            effect.World = Matrix.Identity;
+            effect.Projection = projection;
+            effect.View = view;
+
+            drawCrane(gameTime);
 
             base.Draw(gameTime);
+        }
+
+        private void drawCrane(GameTime time)
+        {
+            Matrix matY, matTrans;
+
+            matY = Matrix.CreateRotationY(theCrane.Rotation);
+            matTrans = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
+
+            world = matY * matTrans;
+            effect.World = world;
+
+            theCrane.Model.Draw(world, theCamera.View, theCamera.Projection);
+
         }
     }
 }
