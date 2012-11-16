@@ -17,31 +17,21 @@ namespace Cubes
     /// </summary>
     public class Camera : Microsoft.Xna.Framework.GameComponent
     {
-        private IInputHandler input;
         private GraphicsDeviceManager graphics;
 
-        private Matrix projection;
-        private Matrix view;
+        private Matrix view, projection;
 
-        private int selectedPlanet = 0;
-
-        public int SelectedPlanet
-        {
-            get { return selectedPlanet; }
-            set { selectedPlanet = value; }
-        }
-
-        private Vector3 camPos = new Vector3(200.0f, 300.0f, 0.0f);
-        private Vector3 camTar = Vector3.Zero;
-        private Vector3 camUpVec = Vector3.Up;
-
+        private Vector3 camPos = new Vector3(300.0f, 200.0f, 0.0f);
+        private Vector3 camTar = new Vector3(0.0f, 50.0f, 0.0f);
+        private Vector3 camUp = Vector3.Up;
         private Vector3 camRef = new Vector3(0.0f, 0.0f, -1.0f);
 
-        private float camYaw = 0.0f;
-        private float camPitch = 0.0f;
+        private float yaw = 0.0f;
+        private float pitch = 0.0f;
 
-        private const float spinRate = 40.0f;
+        private float spinrate = 10.0f;
 
+        #region Get/Set methods
         public Vector3 CamPos
         {
             get { return camPos; }
@@ -70,33 +60,35 @@ namespace Cubes
             get { return view; }
             set { view = value; }
         }
+        #endregion
 
         public Camera(Game game)
             : base(game)
         {
+            // TODO: Construct any child components here
             graphics = (GraphicsDeviceManager)Game.Services.GetService(typeof(IGraphicsDeviceManager));
-            input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
         }
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
-        /// to run. This is where it can query for any required services and load content.
+        /// to run.  This is where it can query for any required services and load content.
         /// </summary>
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-
-            base.Initialize();
             this.InitializeCam();
             camRef = ((-1.0f) * camPos);
+            base.Initialize();
         }
 
+        #region Initialize methods
         private void InitializeCam()
         {
             float aspecRatio = (float)graphics.GraphicsDevice.Viewport.Width / (float)graphics.GraphicsDevice.Viewport.Height;
             Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspecRatio, 1.0f, 5000.0f, out projection);
-            Matrix.CreateLookAt(ref camPos, ref camTar, ref camUpVec, out view);
+            Matrix.CreateLookAt(ref camPos, ref camTar, ref camUp, out view);
         }
+        #endregion
 
         /// <summary>
         /// Allows the game component to update itself.
@@ -104,55 +96,7 @@ namespace Cubes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (input.KeyboardState.IsKeyDown(Keys.Left))
-            {
-                camYaw = camYaw + (spinRate * timeDelta);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.Right))
-            {
-                camYaw = camYaw - (spinRate * timeDelta);
-            }
-
-            if (camYaw > 360)
-            {
-                camYaw -= 360;
-            }
-            else if (camYaw < 0)
-            {
-                camYaw += 360;
-            }
-
-            if (input.KeyboardState.IsKeyDown(Keys.Up))
-            {
-                camPitch = camPitch - (spinRate * timeDelta);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.Down))
-            {
-                camPitch = camPitch + (spinRate * timeDelta);
-            }
-
-            if (camPitch > 30)
-            {
-                camPitch = 30;
-            }
-            else if (camPitch < -30)
-            {
-                camPitch = -30;
-            }
-
-            Matrix rotMat;
-            Matrix.CreateRotationY(MathHelper.ToRadians(camYaw), out rotMat);
-
-            rotMat = Matrix.CreateRotationX(MathHelper.ToRadians(camPitch)) * rotMat;
-
-            Vector3 transRef;
-            Vector3.Transform(ref camRef, ref rotMat, out transRef);
-
-            Vector3.Add(ref camPos, ref transRef, out camTar);
-
-            Matrix.CreateLookAt(ref camPos, ref camTar, ref camUpVec, out view);
+            // TODO: Add your update code here
 
             base.Update(gameTime);
         }

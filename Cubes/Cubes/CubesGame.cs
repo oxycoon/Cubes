@@ -39,8 +39,13 @@ namespace Cubes
             Content.RootDirectory = "Content";
 
             input = new InputHandler(this);
+            this.Components.Add(input);
+
             theCamera = new Camera(this);
+            this.Components.Add(theCamera);
+
             theCrane = new Crane(this);
+            this.Components.Add(theCrane);
         }
 
         /// <summary>
@@ -126,8 +131,6 @@ namespace Cubes
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-
-
             // TODO: Add your drawing code here
             view = theCamera.View;
             projection = theCamera.Projection;
@@ -143,16 +146,16 @@ namespace Cubes
 
         private void drawCrane(GameTime time)
         {
-            Matrix matY, matTrans;
+            Matrix matY, matTrans, matScale;
 
             matY = Matrix.CreateRotationY(theCrane.Rotation);
             matTrans = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
+            matScale = Matrix.CreateScale(0.01f);
 
-            world = matY * matTrans;
+            world = matY * matTrans * matScale;
             effect.World = world;
 
             theCrane.Model.Draw(world, theCamera.View, theCamera.Projection);
-
         }
     }
 }

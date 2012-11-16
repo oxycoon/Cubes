@@ -18,6 +18,7 @@ namespace Cubes
     public class Crane : Microsoft.Xna.Framework.GameComponent
     {
         private Model theCraneModel;
+        private IInputHandler input;
 
         private float rotation = 0.0f;
 
@@ -39,6 +40,7 @@ namespace Cubes
             : base(game)
         {
             // TODO: Construct any child components here
+            input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
         }
 
         /// <summary>
@@ -59,13 +61,12 @@ namespace Cubes
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            KeyboardState ks = Keyboard.GetState();
 
-            if (ks.IsKeyDown(Keys.Right) || ks.IsKeyDown(Keys.D))
+            if (input.KeyboardState.IsKeyDown(Keys.Right) || input.KeyboardState.IsKeyDown(Keys.D))
             {
                 rotation += 0.03f;
             }
-            if (ks.IsKeyDown(Keys.Left) || ks.IsKeyDown(Keys.A))
+            if (input.KeyboardState.IsKeyDown(Keys.Left) || input.KeyboardState.IsKeyDown(Keys.A))
             {
                 rotation -= 0.03f;
             }
