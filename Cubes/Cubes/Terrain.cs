@@ -21,7 +21,7 @@ namespace Cubes
 
         private int width, length, height;
 
-        private int[][] heightMap;
+        private int[,] heightMap;
 
         VertexPositionColor[] vertices;
         int[] indices;
@@ -58,10 +58,10 @@ namespace Cubes
         private void generateHeightMap()
         {
             Random random = new Random((int) ((long) DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond));
-            heightMap = int[width][length];
+            heightMap = new int[width,length];
             for (int x = 0; x < width; x++)
                 for (int y = 0; x < length; x++)
-                    heightMap[x][y] = random.Next(height);
+                    heightMap[x,y] = random.Next(height);
         }
 
         private void SetUpVertices()
@@ -72,7 +72,7 @@ namespace Cubes
             {
                 for (int y = 0; y < length; y++)
                 {
-                    vertices[x + y * width].Position = new Vector3(x, heightMap[x][y], -y);
+                    vertices[x + y * width].Position = new Vector3(x, heightMap[x,y], -y);
                 }
             }
         }
@@ -121,6 +121,11 @@ namespace Cubes
             // TODO: Add your update code here
 
             base.Update(gameTime);
+        }
+
+        public void Draw(GameTime time, Matrix world, Matrix view, Matrix projection)
+        { 
+            
         }
     }
 }

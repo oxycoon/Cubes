@@ -73,5 +73,18 @@ namespace Cubes
 
             base.Update(gameTime);
         }
+
+        public void Draw(GameTime gametime, Camera camera, Matrix world)
+        {
+            Matrix matY, matTrans, matScale;
+
+            matY = Matrix.CreateRotationY(rotation);
+            matTrans = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
+            matScale = Matrix.CreateScale(0.01f);
+
+            world = matY * matTrans * matScale;
+
+            theCraneModel.Draw(world, camera.View, camera.Projection);
+        }
     }
 }

@@ -139,7 +139,7 @@ namespace Cubes
             effect.Projection = projection;
             effect.View = view;
 
-            drawCrane(gameTime);
+            theCrane.Draw(gameTime, theCamera, world);
 
             base.Draw(gameTime);
         }
