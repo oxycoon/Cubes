@@ -15,6 +15,7 @@ namespace Cubes
     public interface IInputHandler
     {
         KeyboardState KeyboardState { get; }
+        MouseState MouseState { get; }
     };
 
     /// <summary>
@@ -28,6 +29,11 @@ namespace Cubes
             get { return (keyboardState); }
         }
 
+        private MouseState mouseState;
+        public MouseState MouseState
+        {
+            get { return (mouseState); }
+        }
 
         public InputHandler(Game game)
             : base(game)

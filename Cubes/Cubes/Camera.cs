@@ -18,10 +18,12 @@ namespace Cubes
     public class Camera : Microsoft.Xna.Framework.GameComponent
     {
         private GraphicsDeviceManager graphics;
+        private GraphicsDevice device;
+        private IInputHandler input;
 
         private Matrix view, projection;
 
-        private Vector3 camPos = new Vector3(300.0f, 200.0f, 0.0f);
+        private Vector3 camPos = new Vector3(300.0f, 50.0f, 0.0f);
         private Vector3 camTar = new Vector3(0.0f, 50.0f, 0.0f);
         private Vector3 camUp = Vector3.Up;
         private Vector3 camRef = new Vector3(0.0f, 0.0f, -1.0f);
@@ -29,7 +31,9 @@ namespace Cubes
         private float yaw = 0.0f;
         private float pitch = 0.0f;
 
-        private float spinrate = 10.0f;
+        private float spinrate = 3.0f;
+
+        private int mouseX, mouseY, mouseLockedX, mouseLockedY;
 
         #region Get/Set methods
         public Vector3 CamPos
@@ -67,6 +71,8 @@ namespace Cubes
         {
             // TODO: Construct any child components here
             graphics = (GraphicsDeviceManager)Game.Services.GetService(typeof(IGraphicsDeviceManager));
+            device = (GraphicsDevice)Game.Services.GetService(typeof(GraphicsDevice));
+            input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
         }
 
         /// <summary>
@@ -78,6 +84,13 @@ namespace Cubes
             // TODO: Add your initialization code here
             this.InitializeCam();
             camRef = ((-1.0f) * camPos);
+
+            mouseX = mouseLockedX = Game.Window.ClientBounds.Width / 2;
+            mouseY = mouseLockedY = Game.Window.ClientBounds.Height / 2;
+
+            Mouse.SetPosition(mouseX, mouseY);
+
+
             base.Initialize();
         }
 
@@ -97,6 +110,66 @@ namespace Cubes
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+
+            float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            MouseState mouse = Mouse.GetState();
+
+            #region Mouse rotation logic
+            if (ButtonState.Pressed.Equals(mouse.LeftButton))
+            {
+                if (mouse.X > mouseX || input.KeyboardState.IsKeyDown(Keys.Q))
+                {
+                    yaw += spinrate;
+                }
+                else if (mouse.X < mouseX)
+                {
+                    yaw -= spinrate;
+                }
+
+                if (yaw > 360)
+                {
+                    yaw -= 360;
+                }
+                else if (yaw < 0)
+                {
+                    yaw += 360;
+                }
+
+                if (mouse.Y > mouseY + 10)
+                {
+                    pitch -= spinrate;
+                }
+                else if (mouse.Y < mouseY - 10)
+                {
+                    pitch += spinrate;
+                }
+
+                if (pitch > 150)
+                {
+                    pitch = 150;
+                }
+                else if (pitch < 90)
+                {
+                    pitch = 90;
+                }
+            
+            #endregion
+
+            Matrix rotMat = Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(yaw), MathHelper.ToRadians(pitch), 1.0f);
+
+            Vector3 transRef;
+            Vector3.Transform(ref camRef, ref rotMat, out transRef);
+
+
+            camPos = transRef;
+
+            Matrix.CreateLookAt(ref camPos, ref camTar, ref camUp, out view);
+
+
+            Mouse.SetPosition(mouseLockedX, mouseLockedY);
+
+            }
 
             base.Update(gameTime);
         }
