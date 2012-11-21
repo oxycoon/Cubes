@@ -74,6 +74,12 @@ namespace Cubes
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Draws the crane.
+        /// </summary>
+        /// <param name="gametime">Provides a snapshot of timing values</param>
+        /// <param name="camera">Camera to draw object in correct areas</param>
+        /// <param name="world">World matrix for translations, if neccesary</param>
         public void Draw(GameTime gametime, Camera camera, Matrix world)
         {
             Matrix matY, matTrans, matScale;
