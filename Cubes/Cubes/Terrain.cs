@@ -17,18 +17,12 @@ namespace Cubes
     /// </summary>
     public class Terrain : Microsoft.Xna.Framework.GameComponent
     {
-        private Matrix world, view, projection;
-
         private int width, length, height;
 
         private int[,] heightMap;
 
-        VertexPositionColor[] vertices;
-        int[] indices;
-
-        private double xPos, yPos;
-        private bool isHooked;
-
+        private VertexPositionColor[] vertices;
+        private int[] indices;
 
         public Terrain(Game game)
             : this(game, 200, 200, 4)
@@ -52,7 +46,6 @@ namespace Cubes
             generateHeightMap();
             SetUpVertices();
             SetUpIndices();
-            throw new NotImplementedException();
         }
 
         private void generateHeightMap()
@@ -110,6 +103,20 @@ namespace Cubes
             // TODO: Add your initialization code here
 
             base.Initialize();
+        }
+
+        public void Draw(GameTime gametime, BasicEffect effect, GraphicsDevice device)
+        {
+            Matrix world = Matrix.CreateTranslation(-width / 2.0f, 0, length / 2.0f);
+
+            effect.World = world;
+
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+
+                device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, indices, 0, indices.Length / 3, VertexPositionColor.VertexDeclaration);
+            }
         }
 
         /// <summary>

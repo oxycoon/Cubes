@@ -22,6 +22,7 @@ namespace Cubes
 
         private Crane theCrane;
         private Hook theHook;
+        private Terrain theTerrain;
         private List<Cube> theCubeList;
         private InputHandler input;
         private Camera theCamera;
@@ -46,6 +47,9 @@ namespace Cubes
 
             theCrane = new Crane(this);
             this.Components.Add(theCrane);
+
+            theTerrain = new Terrain(this);
+            this.Components.Add(theTerrain);
         }
 
         /// <summary>
@@ -138,6 +142,8 @@ namespace Cubes
             effect.World = Matrix.Identity;
             effect.Projection = projection;
             effect.View = view;
+
+            theTerrain.Draw(gameTime, effect, device);
 
             theCrane.Draw(gameTime, theCamera, world);
 
