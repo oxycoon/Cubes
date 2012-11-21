@@ -116,7 +116,7 @@ namespace Cubes
             MouseState mouse = Mouse.GetState();
 
             #region Mouse rotation logic
-            if (ButtonState.Pressed.Equals(mouse.LeftButton))
+            if (ButtonState.Pressed.Equals(mouse.LeftButton) && Game.IsActive)
             {
                 if (mouse.X > mouseX || input.KeyboardState.IsKeyDown(Keys.Q))
                 {
