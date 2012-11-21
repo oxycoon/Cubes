@@ -64,6 +64,7 @@ namespace Cubes
             initDevice();
 
             this.IsMouseVisible = true;
+           
 
             base.Initialize();
         }
@@ -100,6 +101,7 @@ namespace Cubes
 
             // TODO: use this.Content to load your game content here
             theCrane.Model = Content.Load<Model>("Crane");
+            theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
         }
 
         /// <summary>

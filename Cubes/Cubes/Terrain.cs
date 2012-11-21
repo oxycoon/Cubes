@@ -12,6 +12,20 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Cubes
 {
+
+    public struct VertexPositionColorNormal
+    {
+        public Vector3 Position;
+        public Color Color;
+        public Vector3 Normal;
+
+        public readonly static VertexDeclaration VertexDeclaration = new VertexDeclaration
+        (
+            new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+            new VertexElement(sizeof(float) * 3, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+            new VertexElement(sizeof(float) * 3 + 4, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
+        );
+    }
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
@@ -19,13 +33,22 @@ namespace Cubes
     {
         private int width, length, height;
 
-        private int[,] heightMap;
+        private float[,] heightMap;
 
-        private VertexPositionColor[] vertices;
+        private VertexPositionColorNormal[] vertices;
+
         private int[] indices;
 
+        private Texture2D terrTex;
+
+        public Texture2D TerrTex
+        {
+            get { return terrTex; }
+            set { terrTex = value; }
+        }
+
         public Terrain(Game game)
-            : this(game, 200, 200, 4)
+            : this(game, 200, 200, 2)
         {
         }
 
@@ -46,27 +69,30 @@ namespace Cubes
             generateHeightMap();
             SetUpVertices();
             SetUpIndices();
+            CalculateNormals();
         }
 
         private void generateHeightMap()
         {
             Random random = new Random((int) ((long) DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond));
-            heightMap = new int[width,length];
+            heightMap = new float[width,length];
             for (int x = 0; x < width; x++)
-                for (int y = 0; x < length; x++)
-                    heightMap[x,y] = random.Next(height);
+                for (int y = 0; y < length-1; y++)
+                    heightMap[x,y] = (float)random.Next(height) / 4;
         }
 
         private void SetUpVertices()
         {
-            vertices = new VertexPositionColor[width * length];
+            vertices = new VertexPositionColorNormal[width * length];
 
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < length; y++)
                 {
                     vertices[x + y * width].Position = new Vector3(x, heightMap[x,y], -y);
+                    vertices[x + y * width].Color = Color.Brown;
                 }
+
             }
         }
 
@@ -101,21 +127,20 @@ namespace Cubes
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-
             base.Initialize();
         }
 
         public void Draw(GameTime gametime, BasicEffect effect, GraphicsDevice device)
         {
             Matrix world = Matrix.CreateTranslation(-width / 2.0f, 0, length / 2.0f);
-
+            effect.EnableDefaultLighting();
             effect.World = world;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
 
-                device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, indices, 0, indices.Length / 3, VertexPositionColor.VertexDeclaration);
+                device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, indices, 0, indices.Length / 3, VertexPositionColorNormal.VertexDeclaration);
             }
         }
 
@@ -134,5 +159,30 @@ namespace Cubes
         { 
             
         }
+
+        private void CalculateNormals()
+        {
+            for (int i = 0; i < vertices.Length; i++)
+                vertices[i].Normal = new Vector3(0, 0, 0);
+
+            for (int i = 0; i < indices.Length / 3; i++)
+            {
+                int index1 = indices[i * 3];
+                int index2 = indices[i * 3 + 1];
+                int index3 = indices[i * 3 + 2];
+
+                Vector3 side1 = vertices[index1].Position - vertices[index3].Position;
+                Vector3 side2 = vertices[index1].Position - vertices[index2].Position;
+                Vector3 normal = Vector3.Cross(side1, side2);
+
+                vertices[index1].Normal += normal;
+                vertices[index2].Normal += normal;
+                vertices[index3].Normal += normal;
+            }
+
+            for (int i = 0; i < vertices.Length; i++)
+                vertices[i].Normal.Normalize();
+        }
+
     }
 }
