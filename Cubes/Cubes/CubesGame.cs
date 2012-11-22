@@ -101,7 +101,7 @@ namespace Cubes
 
             // TODO: use this.Content to load your game content here
             theCrane.Model = Content.Load<Model>("Crane");
-            theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
+            //theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
         }
 
         /// <summary>
@@ -146,24 +146,9 @@ namespace Cubes
             effect.View = view;
 
             theTerrain.Draw(gameTime, effect, device);
-
             theCrane.Draw(gameTime, theCamera, world);
 
             base.Draw(gameTime);
-        }
-
-        private void drawCrane(GameTime time)
-        {
-            Matrix matY, matTrans, matScale;
-
-            matY = Matrix.CreateRotationY(theCrane.Rotation);
-            matTrans = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
-            matScale = Matrix.CreateScale(0.01f);
-
-            world = matY * matTrans * matScale;
-            effect.World = world;
-
-            theCrane.Model.Draw(world, theCamera.View, theCamera.Projection);
         }
     }
 }

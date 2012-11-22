@@ -60,25 +60,35 @@ namespace Cubes
             this.width = width;
             this.length = length;
             this.height = height;
-
-            generateTerrain();
         }
 
-        public void generateTerrain()
+        /// <summary>
+        /// Allows the game component to perform any initialization it needs to before starting
+        /// to run.  This is where it can query for any required services and load content.
+        /// </summary>
+        public override void Initialize()
         {
-            generateHeightMap();
+            // TODO: Add your initialization code here
+            GenerateTerrain();
+            base.Initialize();
+        }
+
+        #region Initialize methods
+        public void GenerateTerrain()
+        {
+            GenerateHeightMap();
             SetUpVertices();
             SetUpIndices();
             CalculateNormals();
         }
 
-        private void generateHeightMap()
+        private void GenerateHeightMap()
         {
-            Random random = new Random((int) ((long) DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond));
-            heightMap = new float[width,length];
+            Random random = new Random((int)((long)DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond));
+            heightMap = new float[width, length];
             for (int x = 0; x < width; x++)
-                for (int y = 0; y < length-1; y++)
-                    heightMap[x,y] = (float)random.Next(height) / 4;
+                for (int y = 0; y < length - 1; y++)
+                    heightMap[x, y] = (float)random.Next(height) / 4;
         }
 
         private void SetUpVertices()
@@ -89,7 +99,7 @@ namespace Cubes
             {
                 for (int y = 0; y < length; y++)
                 {
-                    vertices[x + y * width].Position = new Vector3(x, heightMap[x,y], -y);
+                    vertices[x + y * width].Position = new Vector3(x, heightMap[x, y], -y);
                     vertices[x + y * width].Color = Color.Brown;
                 }
 
@@ -120,15 +130,30 @@ namespace Cubes
             }
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
-        public override void Initialize()
+        private void CalculateNormals()
         {
-            // TODO: Add your initialization code here
-            base.Initialize();
+            for (int i = 0; i < vertices.Length; i++)
+                vertices[i].Normal = new Vector3(0, 0, 0);
+
+            for (int i = 0; i < indices.Length / 3; i++)
+            {
+                int index1 = indices[i * 3];
+                int index2 = indices[i * 3 + 1];
+                int index3 = indices[i * 3 + 2];
+
+                Vector3 side1 = vertices[index1].Position - vertices[index3].Position;
+                Vector3 side2 = vertices[index1].Position - vertices[index2].Position;
+                Vector3 normal = Vector3.Cross(side1, side2);
+
+                vertices[index1].Normal += normal;
+                vertices[index2].Normal += normal;
+                vertices[index3].Normal += normal;
+            }
+
+            for (int i = 0; i < vertices.Length; i++)
+                vertices[i].Normal.Normalize();
         }
+        #endregion
 
         public void Draw(GameTime gametime, BasicEffect effect, GraphicsDevice device)
         {
@@ -156,33 +181,8 @@ namespace Cubes
         }
 
         public void Draw(GameTime time, Matrix world, Matrix view, Matrix projection)
-        { 
-            
-        }
-
-        private void CalculateNormals()
         {
-            for (int i = 0; i < vertices.Length; i++)
-                vertices[i].Normal = new Vector3(0, 0, 0);
 
-            for (int i = 0; i < indices.Length / 3; i++)
-            {
-                int index1 = indices[i * 3];
-                int index2 = indices[i * 3 + 1];
-                int index3 = indices[i * 3 + 2];
-
-                Vector3 side1 = vertices[index1].Position - vertices[index3].Position;
-                Vector3 side2 = vertices[index1].Position - vertices[index2].Position;
-                Vector3 normal = Vector3.Cross(side1, side2);
-
-                vertices[index1].Normal += normal;
-                vertices[index2].Normal += normal;
-                vertices[index3].Normal += normal;
-            }
-
-            for (int i = 0; i < vertices.Length; i++)
-                vertices[i].Normal.Normalize();
         }
-
     }
 }

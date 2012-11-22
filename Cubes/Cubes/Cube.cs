@@ -21,6 +21,8 @@ namespace Cubes
 
         private double xPos, yPos;
         private bool isHooked;
+
+        private Vector3 cubePosition;
         
 
         public Cube(Game game)
