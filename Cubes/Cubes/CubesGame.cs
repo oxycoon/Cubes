@@ -28,7 +28,7 @@ namespace Cubes
         private Camera theCamera;
 
         private Matrix world, view, projection;
-        private Stack<Matrix> matrixStrack = new Stack<Matrix>();
+        private Stack<Matrix> matrixStack = new Stack<Matrix>();
 
         BasicEffect effect;
 
@@ -47,6 +47,9 @@ namespace Cubes
 
             theCrane = new Crane(this);
             this.Components.Add(theCrane);
+
+            theHook = new Hook(this);
+            this.Components.Add(theHook);
 
             theTerrain = new Terrain(this);
             this.Components.Add(theTerrain);
@@ -101,6 +104,7 @@ namespace Cubes
 
             // TODO: use this.Content to load your game content here
             theCrane.Model = Content.Load<Model>("Crane");
+            theHook.Model = Content.Load<Model>("Hook");
             //theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
         }
 
@@ -146,7 +150,8 @@ namespace Cubes
             effect.View = view;
 
             theTerrain.Draw(gameTime, effect, device);
-            theCrane.Draw(gameTime, theCamera, world);
+            matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
+            matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek()));
 
             base.Draw(gameTime);
         }

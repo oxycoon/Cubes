@@ -80,7 +80,8 @@ namespace Cubes
         /// <param name="gametime">Provides a snapshot of timing values</param>
         /// <param name="camera">Camera to draw object in correct areas</param>
         /// <param name="world">World matrix for translations, if neccesary</param>
-        public void Draw(GameTime gametime, Camera camera, Matrix world)
+        /// <returns name="world">The generated world matrix</returns>
+        public Matrix Draw(GameTime gametime, Camera camera, Matrix world)
         {
             Matrix matY, matTrans, matScale;
 
@@ -91,6 +92,8 @@ namespace Cubes
             world = matY * matTrans * matScale;
 
             theCraneModel.Draw(world, camera.View, camera.Projection);
+
+            return world;
         }
     }
 }
