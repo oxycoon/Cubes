@@ -69,19 +69,19 @@ namespace Cubes
             // TODO: Add your update code here
             if (input.KeyboardState.IsKeyDown(Keys.W))
             {
-                xPos -= 3.0f;
+                xPos -= 1.0f;
             }
             if (input.KeyboardState.IsKeyDown(Keys.S))
             {
-                xPos += 3.0f;
+                xPos += 1.0f;
             }
             if (input.KeyboardState.IsKeyDown(Keys.R))
             {
-                yPos -= 3.0f;
+                yPos -= 1.0f;
             }
             if (input.KeyboardState.IsKeyDown(Keys.F))
             {
-                yPos += 3.0f;
+                yPos += 1.0f;
             }
 
             if (yPos > 75.0f)
@@ -105,27 +105,22 @@ namespace Cubes
         /// <returns name="world">The generated world matrix</returns>
         public Matrix Draw(GameTime gametime, Camera camera, Matrix _world, float craneRotation)
         {
-            Matrix matTrans, matScale, matOrbit, world;
+            Matrix matHookTrans, matHookScale, matHookOrbit, hookWorld, matWireScale, matWireTrans, matWireOrb, wireWorld;
 
-            matScale = Matrix.CreateScale(20.0f);
-            matTrans = Matrix.CreateTranslation(0.0f, 80.0f - yPos, 100.0f - xPos);
-            matOrbit = matTrans * Matrix.CreateRotationY(craneRotation);
+            matHookScale = Matrix.CreateScale(20.0f);
+            matHookTrans = Matrix.CreateTranslation(0.0f, 80.0f - yPos, 100.0f - xPos);
+            matHookOrbit = matHookTrans * Matrix.CreateRotationY(craneRotation);
+            hookWorld = _world * matHookScale * matHookOrbit;
 
-            //TODO: Fix ISROT.
-            //isrot, identify, scale, rotation, orbit, translation
-            //world = matTrans * matScale * _world;
+            matWireScale = Matrix.CreateScale(new Vector3(5.0f, yPos*2, 5.0f));
+            matWireTrans = Matrix.CreateTranslation(0.0f, 86.0f - yPos, 100 - xPos);
+            matWireOrb = matWireTrans * Matrix.CreateRotationY(craneRotation);
+            wireWorld = _world * matWireScale * matWireOrb;
 
-            world = _world * matScale * matOrbit;
+            theHookModel.Draw(hookWorld, camera.View, camera.Projection);
+            theWireModel.Draw(wireWorld, camera.View, camera.Projection);
 
-            //matWireScale = Matrix.CreateScale(new Vector3(10.0f, yPos, 10.0f));
-            //matWireTrans = Matrix.CreateTranslation(0.0f, 400.0f - (yPos/2), (470.0f * 2) - (xPos * 2));
-            //wireWorld = matWireScale * matWireTrans *_world;
-
-            theHookModel.Draw(world, camera.View, camera.Projection);
-            //theWireModel.Draw(wireWorld, camera.View, camera.Projection);
-
-
-            return world;
+            return hookWorld;
         }
     }
 }
