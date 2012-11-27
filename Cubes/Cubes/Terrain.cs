@@ -34,6 +34,7 @@ namespace Cubes
     {
         private int width, length, height;
 
+        private static int CRANELENGTH = 100;
         private static float SIZEMULTIPLYER = 4.0f;
 
         private float[,] heightMap;
@@ -105,7 +106,12 @@ namespace Cubes
             {
                 for (int y = 0; y < length; y++)
                 {
-                    vertices[x + y * width].Position = new Vector3(x * SIZEMULTIPLYER, heightMap[x, y], y * SIZEMULTIPLYER);
+                    if (Math.Abs(Math.Sqrt(Math.Pow(x - width / 2, 2) + Math.Pow(y - length / 2, 2))) <= (CRANELENGTH+20) / SIZEMULTIPLYER){
+                        vertices[x + y * width].Position = new Vector3(x * SIZEMULTIPLYER, heightMap[x, y], y * SIZEMULTIPLYER);
+                    } else {
+                        vertices[x + y * width].Position = new Vector3(x * SIZEMULTIPLYER, heightMap[x, y] * SIZEMULTIPLYER, y * SIZEMULTIPLYER);
+                    }
+
                     //vertices[x + y * width].TextureCoordinate.X = (x) / (width);
                     //vertices[x + y * width].TextureCoordinate.Y = (y) / (length);
                     //vertices[x + y * width].TextureCoordinate.X = ((x % 2 == 0) ? 1 : 0);
