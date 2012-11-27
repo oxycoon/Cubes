@@ -39,6 +39,8 @@ namespace Cubes
 
         private int[] indices;
 
+        private Vector3 ambientLight, ambientMaterial, diffuseLight, diffuseMaterial, lightDirection;
+
         private Texture2D terrTex;
 
         public Texture2D TerrTex
@@ -70,6 +72,7 @@ namespace Cubes
         {
             // TODO: Add your initialization code here
             GenerateTerrain();
+            setupLighting();
             base.Initialize();
         }
 
@@ -153,14 +156,35 @@ namespace Cubes
             for (int i = 0; i < vertices.Length; i++)
                 vertices[i].Normal.Normalize();
         }
+
+        private void setupLighting()
+        {
+            ambientLight = new Vector3(1.0f, 1.0f, 1.0f);
+            ambientMaterial = new Vector3(0.7f, 0.7f, 0.7f);
+            diffuseLight = new Vector3(1.0f, 1.0f, 1.0f);
+            diffuseMaterial = new Vector3(0.4f, 0.7f, 0.6f);
+            lightDirection = new Vector3(1.0f, -1.0f, -1.0f);
+        }
+
         #endregion
 
-        public void Draw(GameTime gametime, BasicEffect effect, GraphicsDevice device)
+        public void Draw(GameTime gametime, Effect effect, GraphicsDevice device)
         {
-            Matrix world = Matrix.CreateTranslation(-width / 2.0f, 0, length / 2.0f);
-            effect.EnableDefaultLighting();
-            effect.World = world;
+            RasterizerState rs = new RasterizerState();
+            rs.CullMode = CullMode.None;
+            rs.FillMode = FillMode.Solid;
+            device.RasterizerState = rs;
 
+            Matrix world = Matrix.CreateTranslation(-width / 2.0f, 0, length / 2.0f);
+            effect.Parameters["xWorld"].SetValue(world);
+            effect.Parameters["xEnableLightingColor"].SetValue(true);
+            effect.Parameters["xDiffuseLight"].SetValue(diffuseLight);
+            effect.Parameters["xDiffuseMaterial"].SetValue(diffuseMaterial);
+            effect.Parameters["xAmbientLight"].SetValue(ambientLight);
+            effect.Parameters["xAmbientMaterial"].SetValue(ambientMaterial);
+            effect.Parameters["xLightDirection"].SetValue(lightDirection);
+
+            effect.CurrentTechnique = effect.Techniques["PhongShader"];
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();

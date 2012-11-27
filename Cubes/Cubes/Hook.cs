@@ -30,10 +30,10 @@ namespace Cubes
             set { theHookModel = value; }
         }
 
-        private double altitude;
+        //private double altitude;
         private bool isHooked;
 
-        private Matrix world, view, projection;
+        //private Matrix world, view, projection;
 
         public Hook(Game game)
             : base(game)

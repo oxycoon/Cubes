@@ -30,7 +30,8 @@ namespace Cubes
         private Matrix world, view, projection;
         private Stack<Matrix> matrixStack = new Stack<Matrix>();
 
-        BasicEffect effect;
+        //BasicEffect effect;
+        Effect effect;
 
         private bool isFullScreen = false;
 
@@ -86,9 +87,6 @@ namespace Cubes
             Window.Title = "Crane Simulator";
 
             //Initialiserer Effect-objektet:
-            effect = new BasicEffect(graphics.GraphicsDevice);
-            effect.VertexColorEnabled = true;
-            effect.TextureEnabled = false;
         }
         #endregion
 
@@ -105,6 +103,8 @@ namespace Cubes
             // TODO: use this.Content to load your game content here
             theCrane.Model = Content.Load<Model>("Crane");
             theHook.Model = Content.Load<Model>("Hook");
+
+            effect = Content.Load<Effect>("MyEffect");
             //theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
         }
 
@@ -145,14 +145,16 @@ namespace Cubes
             view = theCamera.View;
             projection = theCamera.Projection;
 
-            effect.World = Matrix.Identity;
-            effect.Projection = projection;
-            effect.View = view;
+            effect.Parameters["xWorld"].SetValue(Matrix.Identity);
+            effect.Parameters["xProjection"].SetValue(projection);
+            effect.Parameters["xView"].SetValue(view);
 
             theTerrain.Draw(gameTime, effect, device);
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
             matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek()));
 
+            matrixStack.Pop();
+            matrixStack.Pop();
             base.Draw(gameTime);
         }
     }
