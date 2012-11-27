@@ -19,6 +19,7 @@ namespace Cubes
     {
         private Model theCraneModel;
         private IInputHandler input;
+        private Camera camera;
 
         private float rotation = 0.0f;
 
@@ -36,11 +37,12 @@ namespace Cubes
         }
         #endregion
 
-        public Crane(Game game)
+        public Crane(Game game, Camera camera)
             : base(game)
         {
             // TODO: Construct any child components here
             input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
+            this.camera = camera;
         }
 
         /// <summary>
@@ -65,10 +67,12 @@ namespace Cubes
             if (input.KeyboardState.IsKeyDown(Keys.Right) || input.KeyboardState.IsKeyDown(Keys.D))
             {
                 rotation -= 0.03f;
+                camera.rotate(MathHelper.ToDegrees(-0.03f));
             }
             if (input.KeyboardState.IsKeyDown(Keys.Left) || input.KeyboardState.IsKeyDown(Keys.A))
             {
                 rotation += 0.03f;
+                camera.rotate(MathHelper.ToDegrees(0.03f));
             }
 
             base.Update(gameTime);

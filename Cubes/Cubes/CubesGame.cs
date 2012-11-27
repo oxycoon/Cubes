@@ -51,7 +51,7 @@ namespace Cubes
             theCamera = new Camera(this);
             this.Components.Add(theCamera);
 
-            theCrane = new Crane(this);
+            theCrane = new Crane(this, theCamera);
             this.Components.Add(theCrane);
 
             theHook = new Hook(this);

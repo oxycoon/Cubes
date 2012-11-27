@@ -36,6 +36,7 @@ namespace Cubes
         private float spinrate = 3.0f;
 
         private int mouseX, mouseY, mouseLockedX, mouseLockedY;
+        private Game game;
 
         #region Get/Set methods
         public Vector3 CamPos
@@ -75,6 +76,13 @@ namespace Cubes
             graphics = (GraphicsDeviceManager)Game.Services.GetService(typeof(IGraphicsDeviceManager));
             device = (GraphicsDevice)Game.Services.GetService(typeof(GraphicsDevice));
             input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
+
+            this.game = game;
+        }
+
+        public void rotate(float degrees)
+        {
+            yaw += degrees;
         }
 
         /// <summary>
@@ -120,42 +128,32 @@ namespace Cubes
             #region Mouse rotation logic
             if (ButtonState.Pressed.Equals(mouse.LeftButton) && Game.IsActive)
             {
-                if (mouse.X > mouseX || input.KeyboardState.IsKeyDown(Keys.Q))
+                Mouse.SetPosition(mouseLockedX, mouseLockedY);
+                game.IsMouseVisible = false;
+
+                if (mouse.X > mouseX + spinrate)
                 {
                     yaw += spinrate;
                 }
-                else if (mouse.X < mouseX)
+
+                if (mouse.X < mouseX - spinrate)
                 {
                     yaw -= spinrate;
                 }
 
-                if (yaw > 360)
-                {
-                    yaw -= 360;
-                }
-                else if (yaw < 0)
-                {
-                    yaw += 360;
-                }
-
-                if (mouse.Y > mouseY + 10)
+                if (mouse.Y > mouseY - spinrate)
                 {
                     pitch -= spinrate;
                 }
-                else if (mouse.Y < mouseY - 10)
+                if (mouse.Y < mouseY + spinrate)
                 {
                     pitch += spinrate;
                 }
-
-                if (pitch > 150)
-                {
-                    pitch = 150;
-                }
-                else if (pitch < 90)
-                {
-                    pitch = 90;
-                }
-            
+            }
+            else
+            {
+                game.IsMouseVisible = true;
+            }
             #endregion
 
             Matrix rotMat = Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(yaw), MathHelper.ToRadians(pitch), 1.0f);
@@ -163,15 +161,29 @@ namespace Cubes
             Vector3 transRef;
             Vector3.Transform(ref camRef, ref rotMat, out transRef);
 
-
             camPos = transRef;
 
-            Matrix.CreateLookAt(ref camPos, ref camTar, ref camUp, out view);
-
-
-            Mouse.SetPosition(mouseLockedX, mouseLockedY);
-
+            #region Mouse rotation limits
+            if (yaw > 360)
+            {
+                yaw -= 359;
             }
+            else if (yaw < 0)
+            {
+                yaw += 359;
+            }
+
+            if (pitch > 170)
+            {
+                pitch = 170;
+            }
+            else if (pitch < 100)
+            {
+                pitch = 100;
+            }
+            #endregion
+
+            Matrix.CreateLookAt(ref camPos, ref camTar, ref camUp, out view);
 
             base.Update(gameTime);
         }
