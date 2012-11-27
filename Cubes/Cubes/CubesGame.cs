@@ -30,10 +30,15 @@ namespace Cubes
         private Matrix world, view, projection;
         private Stack<Matrix> matrixStack = new Stack<Matrix>();
 
+        private Texture2D texSkyDome;
+        private Model theSkyDome;
+        private DepthStencilState dsState;
+
         //BasicEffect effect;
         Effect effect;
 
         private bool isFullScreen = false;
+
 
         public CubesGame()
         {
@@ -104,11 +109,19 @@ namespace Cubes
             theCrane.Model = Content.Load<Model>("Crane");
             theHook.Model = Content.Load<Model>("Hook");
             theHook.WireModel = Content.Load<Model>("Wire");
-
             theTerrain.TerrTex = Content.Load<Texture2D>("MC_Dirt");
+            
+            theSkyDome = Content.Load<Model>("dome");
+            texSkyDome = Content.Load<Texture2D>("clouds2");
+            
 
             effect = Content.Load<Effect>("MyEffect");
+
+            theSkyDome.Meshes[0].MeshParts[0].Effect =  effect;
             //theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
+
+
+
         }
 
         /// <summary>
@@ -158,7 +171,38 @@ namespace Cubes
 
             matrixStack.Pop();
             matrixStack.Pop();
+
+            DrawSkyDome(view);
             base.Draw(gameTime);
+        }
+
+        private void DrawSkyDome(Matrix currentViewMatrix)
+        {
+            dsState = new DepthStencilState();
+            dsState.DepthBufferWriteEnable = false;
+            device.DepthStencilState = dsState;
+
+            Matrix[] modelTransforms = new Matrix[theSkyDome.Bones.Count];
+            theSkyDome.CopyAbsoluteBoneTransformsTo(modelTransforms);
+
+            Matrix wMatrix = Matrix.CreateTranslation(0, -0.3f, 0) * Matrix.CreateScale(1000) * Matrix.CreateTranslation(theCamera.CamPos);
+            foreach (ModelMesh mesh in theSkyDome.Meshes)
+            {
+                foreach (Effect currentEffect in mesh.Effects)
+                {
+                    Matrix worldMatrix = modelTransforms[mesh.ParentBone.Index] * wMatrix;
+                    currentEffect.CurrentTechnique = currentEffect.Techniques["Textured"];
+                    currentEffect.Parameters["xWorld"].SetValue(worldMatrix);
+                    currentEffect.Parameters["xView"].SetValue(currentViewMatrix);
+                    currentEffect.Parameters["xProjection"].SetValue(projection);
+                    currentEffect.Parameters["xTexture1"].SetValue(texSkyDome);
+                    currentEffect.Parameters["xEnableLighting"].SetValue(false);
+                }
+                mesh.Draw();
+            }
+            dsState = new DepthStencilState();
+            dsState.DepthBufferWriteEnable = true;
+            device.DepthStencilState = dsState;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Cubes
         }
 
         public Terrain(Game game)
-            : this(game, 200, 200, 2)
+            : this(game, 500, 500, 2)
         {
         }
 
