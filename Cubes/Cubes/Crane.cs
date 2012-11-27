@@ -89,7 +89,8 @@ namespace Cubes
             matTrans = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
             matScale = Matrix.CreateScale(0.01f);
 
-            world = matY * matTrans * matScale;
+            //isrot, identify, scale, rotation, orbit, translation
+            world = matScale * matY * matTrans;
 
             theCraneModel.Draw(world, camera.View, camera.Projection);
 

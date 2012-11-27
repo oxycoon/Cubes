@@ -26,6 +26,7 @@ namespace Cubes
             new VertexElement(sizeof(float) * 3 + 4, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
         );
     }
+
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
@@ -35,7 +36,7 @@ namespace Cubes
 
         private float[,] heightMap;
 
-        private VertexPositionColorNormal[] vertices;
+        private VertexPositionNormalTexture[] vertices;
 
         private int[] indices;
 
@@ -96,14 +97,41 @@ namespace Cubes
 
         private void SetUpVertices()
         {
-            vertices = new VertexPositionColorNormal[width * length];
+            vertices = new VertexPositionNormalTexture[width * length];
 
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < length; y++)
                 {
                     vertices[x + y * width].Position = new Vector3(x, heightMap[x, y], -y);
-                    vertices[x + y * width].Color = Color.Brown;
+                    //vertices[x + y * width].TextureCoordinate.X = (x) / (width);
+                    //vertices[x + y * width].TextureCoordinate.Y = (y) / (length);
+                    //vertices[x + y * width].TextureCoordinate.X = ((x % 2 == 0) ? 1 : 0);
+                    //vertices[x + y * width].TextureCoordinate.Y = ((y % 2 == 0) ? 1 : 0);
+                    //vertices[x + y * width].TextureCoordinate.X = (float)Math.Cos(x / (Math.PI * 4));
+                    //vertices[x + y * width].TextureCoordinate.Y = (float)Math.Cos(y / (Math.PI * 4));
+
+                    if (x % 6 == 0)
+                        vertices[x + y * width].TextureCoordinate.X = 0.0f;
+                    if ((x + 1) % 6 == 0)
+                        vertices[x + y * width].TextureCoordinate.X = 0.25f;
+                    if ((x + 3) % 6 == 0)
+                        vertices[x + y * width].TextureCoordinate.X = 0.50f;
+                    if ((x + 4) % 6 == 0)
+                        vertices[x + y * width].TextureCoordinate.X = 0.75f;
+                    if ((x + 5) % 6 == 0)
+                        vertices[x + y * width].TextureCoordinate.X = 1.0f;
+
+                    if (y % 5 == 0)
+                        vertices[x + y * width].TextureCoordinate.Y = 0.0f;
+                    if ((y + 1) % 5 == 0)
+                        vertices[x + y * width].TextureCoordinate.Y = 0.25f;
+                    if ((y + 3) % 5 == 0)
+                        vertices[x + y * width].TextureCoordinate.Y = 0.50f;
+                    if ((y + 4) % 5 == 0)
+                        vertices[x + y * width].TextureCoordinate.Y = 0.75f;
+                    if ((y + 5) % 5 == 0)
+                        vertices[x + y * width].TextureCoordinate.Y = 1.0f;
                 }
 
             }
@@ -177,25 +205,26 @@ namespace Cubes
 
             Matrix world = Matrix.CreateTranslation(-width / 2.0f, 0, length / 2.0f);
             effect.Parameters["xWorld"].SetValue(world);
-            effect.Parameters["xEnableLightingColor"].SetValue(true);
+            effect.Parameters["xEnableLightingTexture"].SetValue(true);
             effect.Parameters["xDiffuseLight"].SetValue(diffuseLight);
             effect.Parameters["xDiffuseMaterial"].SetValue(diffuseMaterial);
             effect.Parameters["xAmbientLight"].SetValue(ambientLight);
             effect.Parameters["xAmbientMaterial"].SetValue(ambientMaterial);
             effect.Parameters["xLightDirection"].SetValue(lightDirection);
+            effect.Parameters["xTexture"].SetValue(terrTex);
 
-            effect.CurrentTechnique = effect.Techniques["PhongShader"];
+            effect.CurrentTechnique = effect.Techniques["PhongTexturedShader"];
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
 
-                device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, indices, 0, indices.Length / 3, VertexPositionColorNormal.VertexDeclaration);
+                device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length, indices, 0, indices.Length / 3, VertexPositionNormalTexture.VertexDeclaration);
             }
         }
 
         /// <summary>
         /// Allows the game component to update itself.
-        /// </summary>
+        /// </summary>888
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {

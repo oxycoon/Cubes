@@ -103,6 +103,9 @@ namespace Cubes
             // TODO: use this.Content to load your game content here
             theCrane.Model = Content.Load<Model>("Crane");
             theHook.Model = Content.Load<Model>("Hook");
+            theHook.WireModel = Content.Load<Model>("Wire");
+
+            theTerrain.TerrTex = Content.Load<Texture2D>("MC_Dirt");
 
             effect = Content.Load<Effect>("MyEffect");
             //theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
@@ -151,7 +154,7 @@ namespace Cubes
 
             theTerrain.Draw(gameTime, effect, device);
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
-            matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek()));
+            matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek(), theCrane.Rotation));
 
             matrixStack.Pop();
             matrixStack.Pop();

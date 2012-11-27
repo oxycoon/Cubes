@@ -67,7 +67,7 @@ technique Simplest
 }
 
 // --------- Technique: PhongTexturedShader ----------
-VertexToPixel PhongTexturedVertexShader( float4 inPos : POSITION, float3 inNormal : NORMAL, float2 inTexCoords : TEXCOORD1 )
+VertexToPixel PhongTexturedVertexShader( float4 inPos : POSITION, float3 inNormal : NORMAL, float2 inTexCoords : TEXCOORD )
 {
 	VertexToPixel Output = (VertexToPixel)0;
 
