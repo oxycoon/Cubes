@@ -185,7 +185,7 @@ namespace Cubes
             Matrix[] modelTransforms = new Matrix[theSkyDome.Bones.Count];
             theSkyDome.CopyAbsoluteBoneTransformsTo(modelTransforms);
 
-            Matrix wMatrix = Matrix.CreateTranslation(0, -0.3f, 0) * Matrix.CreateScale(1000) * Matrix.CreateTranslation(theCamera.CamPos);
+            Matrix wMatrix = Matrix.CreateTranslation(0, -0.3f, 0) * Matrix.CreateScale(new Vector3(2000.0f, 3000.0f, 2000.0f)); //* Matrix.CreateTranslation(theCamera.CamPos)
             foreach (ModelMesh mesh in theSkyDome.Meshes)
             {
                 foreach (Effect currentEffect in mesh.Effects)
