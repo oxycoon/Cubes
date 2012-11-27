@@ -26,13 +26,11 @@ namespace Cubes
         private List<Cube> theCubeList;
         private InputHandler input;
         private Camera theCamera;
+        private SkyDome theSky;
 
         private Matrix world, view, projection;
         private Stack<Matrix> matrixStack = new Stack<Matrix>();
 
-        private Texture2D texSkyDome;
-        private Model theSkyDome;
-        private DepthStencilState dsState;
 
         //BasicEffect effect;
         Effect effect;
@@ -59,6 +57,10 @@ namespace Cubes
 
             theTerrain = new Terrain(this);
             this.Components.Add(theTerrain);
+
+            theSky = new SkyDome(this);
+            this.Components.Add(theSky);
+
         }
 
         /// <summary>
@@ -110,14 +112,14 @@ namespace Cubes
             theHook.Model = Content.Load<Model>("Hook");
             theHook.WireModel = Content.Load<Model>("Wire");
             theTerrain.TerrTex = Content.Load<Texture2D>("MC_Dirt");
-            
-            theSkyDome = Content.Load<Model>("dome");
-            texSkyDome = Content.Load<Texture2D>("clouds2");
-            
 
             effect = Content.Load<Effect>("MyEffect");
+            
+            theSky.Model = Content.Load<Model>("dome");
+            theSky.Texture = Content.Load<Texture2D>("clouds2");
+            theSky.Device = device;
+            theSky.Effect = effect;
 
-            theSkyDome.Meshes[0].MeshParts[0].Effect =  effect;
             //theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
 
 
@@ -166,43 +168,16 @@ namespace Cubes
             effect.Parameters["xView"].SetValue(view);
 
             theTerrain.Draw(gameTime, effect, device);
+            theSky.Draw(view, projection);
+
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
             matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek(), theCrane.Rotation));
 
             matrixStack.Pop();
             matrixStack.Pop();
-
-            DrawSkyDome(view);
+            
+            
             base.Draw(gameTime);
-        }
-
-        private void DrawSkyDome(Matrix currentViewMatrix)
-        {
-            dsState = new DepthStencilState();
-            dsState.DepthBufferWriteEnable = false;
-            device.DepthStencilState = dsState;
-
-            Matrix[] modelTransforms = new Matrix[theSkyDome.Bones.Count];
-            theSkyDome.CopyAbsoluteBoneTransformsTo(modelTransforms);
-
-            Matrix wMatrix = Matrix.CreateTranslation(0, -0.3f, 0) * Matrix.CreateScale(new Vector3(2000.0f, 3000.0f, 2000.0f)); //* Matrix.CreateTranslation(theCamera.CamPos)
-            foreach (ModelMesh mesh in theSkyDome.Meshes)
-            {
-                foreach (Effect currentEffect in mesh.Effects)
-                {
-                    Matrix worldMatrix = modelTransforms[mesh.ParentBone.Index] * wMatrix;
-                    currentEffect.CurrentTechnique = currentEffect.Techniques["Textured"];
-                    currentEffect.Parameters["xWorld"].SetValue(worldMatrix);
-                    currentEffect.Parameters["xView"].SetValue(currentViewMatrix);
-                    currentEffect.Parameters["xProjection"].SetValue(projection);
-                    currentEffect.Parameters["xTexture1"].SetValue(texSkyDome);
-                    currentEffect.Parameters["xEnableLighting"].SetValue(false);
-                }
-                mesh.Draw();
-            }
-            dsState = new DepthStencilState();
-            dsState.DepthBufferWriteEnable = true;
-            device.DepthStencilState = dsState;
         }
     }
 }
