@@ -34,6 +34,8 @@ namespace Cubes
     {
         private int width, length, height;
 
+        private static float SIZEMULTIPLYER = 4.0f;
+
         private float[,] heightMap;
 
         private VertexPositionNormalTexture[] vertices;
@@ -51,7 +53,7 @@ namespace Cubes
         }
 
         public Terrain(Game game)
-            : this(game, 500, 500, 2)
+            : this(game, 300, 300, 3)
         {
         }
 
@@ -103,7 +105,7 @@ namespace Cubes
             {
                 for (int y = 0; y < length; y++)
                 {
-                    vertices[x + y * width].Position = new Vector3(x, heightMap[x, y], -y);
+                    vertices[x + y * width].Position = new Vector3(x * SIZEMULTIPLYER, heightMap[x, y], y * SIZEMULTIPLYER);
                     //vertices[x + y * width].TextureCoordinate.X = (x) / (width);
                     //vertices[x + y * width].TextureCoordinate.Y = (y) / (length);
                     //vertices[x + y * width].TextureCoordinate.X = ((x % 2 == 0) ? 1 : 0);
@@ -203,7 +205,7 @@ namespace Cubes
             rs.FillMode = FillMode.Solid;
             device.RasterizerState = rs;
 
-            Matrix world = Matrix.CreateTranslation(-width / 2.0f, 0, length / 2.0f);
+            Matrix world = Matrix.CreateTranslation(-(width * SIZEMULTIPLYER) / 2.0f, 0, -(length*SIZEMULTIPLYER) / 2.0f);
             effect.Parameters["xWorld"].SetValue(world);
             effect.Parameters["xEnableLightingTexture"].SetValue(true);
             effect.Parameters["xDiffuseLight"].SetValue(diffuseLight);
