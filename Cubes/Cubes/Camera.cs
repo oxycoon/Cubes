@@ -23,12 +23,13 @@ namespace Cubes
 
         private Matrix view, projection;
 
-        //private Vector3 camPos = new Vector3(0.0f, 20.0f, 50.0f);
-        //private Vector3 camTar = new Vector3(0.0f, 0.0f, 40.0f);
+        //private Vector3 camPos = new Vector3(2.0f, 20.0f, 4.0f);
+        //private Vector3 camTar = new Vector3(0.0f, 0.0f, 0.0f);
         private Vector3 camPos = new Vector3(400.0f, 50.0f, 0.0f);
         private Vector3 camTar = new Vector3(0.0f, 50.0f, 0.0f);
         private Vector3 camUp = Vector3.Up;
         private Vector3 camRef = new Vector3(0.0f, 0.0f, -1.0f);
+        private float camZoom = 1.0f;
 
         private float yaw = 0.0f;
         private float pitch = 0.0f;
@@ -127,6 +128,7 @@ namespace Cubes
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             MouseState mouse = Mouse.GetState();
+            camZoom = 1.0f + (0.001f * mouse.ScrollWheelValue);
 
             #region Mouse rotation logic
             if (ButtonState.Pressed.Equals(mouse.LeftButton) && Game.IsActive)
@@ -173,15 +175,7 @@ namespace Cubes
             }
 
             #endregion
-
-            Matrix rotMat = Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(yaw), MathHelper.ToRadians(pitch), 1.0f);
-
-            Vector3 transRef;
-            Vector3.Transform(ref camRef, ref rotMat, out transRef);
-
-            camPos = transRef;
-
-            #region Mouse rotation limits
+            #region Rotation limits
             if (yaw > 360)
             {
                 yaw -= 359;
@@ -200,6 +194,15 @@ namespace Cubes
                 pitch = 100;
             }
             #endregion
+
+            Matrix rotMat = Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(yaw), MathHelper.ToRadians(pitch), 1.0f);
+
+            Vector3 transRef;
+            Vector3.Transform(ref camRef, ref rotMat, out transRef);
+
+            //+ ((camPos - camTar) * camZoom)
+
+            camPos = transRef;
 
             Matrix.CreateLookAt(ref camPos, ref camTar, ref camUp, out view);
 

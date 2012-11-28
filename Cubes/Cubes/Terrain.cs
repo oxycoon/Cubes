@@ -111,7 +111,7 @@ namespace Cubes
                     } else {
                         vertices[x + y * width].Position = new Vector3(x * SIZEMULTIPLYER, heightMap[x, y] * SIZEMULTIPLYER, y * SIZEMULTIPLYER);
                     }
-
+                    #region Failed attempts
                     //vertices[x + y * width].TextureCoordinate.X = (x) / (width);
                     //vertices[x + y * width].TextureCoordinate.Y = (y) / (length);
                     //vertices[x + y * width].TextureCoordinate.X = ((x % 2 == 0) ? 1 : 0);
@@ -119,27 +119,36 @@ namespace Cubes
                     //vertices[x + y * width].TextureCoordinate.X = (float)Math.Cos(x / (Math.PI * 4));
                     //vertices[x + y * width].TextureCoordinate.Y = (float)Math.Cos(y / (Math.PI * 4));
 
-                    if (x % 6 == 0)
-                        vertices[x + y * width].TextureCoordinate.X = 0.0f;
-                    if ((x + 1) % 6 == 0)
-                        vertices[x + y * width].TextureCoordinate.X = 0.25f;
-                    if ((x + 3) % 6 == 0)
-                        vertices[x + y * width].TextureCoordinate.X = 0.50f;
-                    if ((x + 4) % 6 == 0)
-                        vertices[x + y * width].TextureCoordinate.X = 0.75f;
-                    if ((x + 5) % 6 == 0)
-                        vertices[x + y * width].TextureCoordinate.X = 1.0f;
+                    //if (x % 6 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.X = 0.0f;
+                    //if ((x + 1) % 6 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.X = 0.25f;
+                    //if ((x + 3) % 6 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.X = 0.50f;
+                    //if ((x + 4) % 6 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.X = 0.75f;
+                    //if ((x + 5) % 6 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.X = 1.0f;
 
-                    if (y % 5 == 0)
-                        vertices[x + y * width].TextureCoordinate.Y = 0.0f;
-                    if ((y + 1) % 5 == 0)
-                        vertices[x + y * width].TextureCoordinate.Y = 0.25f;
-                    if ((y + 3) % 5 == 0)
-                        vertices[x + y * width].TextureCoordinate.Y = 0.50f;
-                    if ((y + 4) % 5 == 0)
-                        vertices[x + y * width].TextureCoordinate.Y = 0.75f;
-                    if ((y + 5) % 5 == 0)
-                        vertices[x + y * width].TextureCoordinate.Y = 1.0f;
+                    //if (y % 5 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.Y = 0.0f;
+                    //if ((y + 1) % 5 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.Y = 0.25f;
+                    //if ((y + 3) % 5 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.Y = 0.50f;
+                    //if ((y + 4) % 5 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.Y = 0.75f;
+                    //if ((y + 5) % 5 == 0)
+                    //    vertices[x + y * width].TextureCoordinate.Y = 1.0f;
+
+                    #endregion
+                    
+                    float textureSpan = 150.0f;
+                    float textureStart = 0.0f;
+                    float textureSteps = 1.0f;
+                    //-1 + (((x mod 4)/2) *2)
+                    vertices[x + y * width].TextureCoordinate.X = textureStart + ((float)((float)((float)x % textureSpan) / textureSpan) * textureSteps);
+                    vertices[x + y * width].TextureCoordinate.Y = textureStart + ((float)((float)((float)y % textureSpan) / textureSpan) * textureSteps);
                 }
 
             }
@@ -239,11 +248,6 @@ namespace Cubes
             // TODO: Add your update code here
 
             base.Update(gameTime);
-        }
-
-        public void Draw(GameTime time, Matrix world, Matrix view, Matrix projection)
-        {
-
         }
     }
 }
