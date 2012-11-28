@@ -80,7 +80,7 @@ namespace Cubes
             this.game = game;
         }
 
-        public void rotate(float degrees)
+        public void Rotate(float degrees)
         {
             yaw += degrees;
         }
@@ -154,6 +154,17 @@ namespace Cubes
             {
                 game.IsMouseVisible = true;
             }
+            #endregion
+            #region Keyboard rotation logic
+            if (input.KeyboardState.IsKeyDown(Keys.Right) || input.KeyboardState.IsKeyDown(Keys.D))
+            {
+                Rotate(MathHelper.ToDegrees(-0.03f));
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.Left) || input.KeyboardState.IsKeyDown(Keys.A))
+            {
+                Rotate(MathHelper.ToDegrees(0.03f));
+            }
+
             #endregion
 
             Matrix rotMat = Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(yaw), MathHelper.ToRadians(pitch), 1.0f);
