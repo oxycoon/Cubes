@@ -129,10 +129,9 @@ namespace Cubes
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             MouseState mouse = Mouse.GetState();
-            
 
             #region Mouse logic
-            camZoom = 1.0f + (0.001f * mouse.ScrollWheelValue);
+            camZoom = 1.0f - (0.001f * mouse.ScrollWheelValue);
             if (ButtonState.Pressed.Equals(mouse.LeftButton) && Game.IsActive)
             {
                 Mouse.SetPosition(mouseLockedX, mouseLockedY);
