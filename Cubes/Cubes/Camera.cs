@@ -42,8 +42,14 @@ namespace Cubes
         private Game game;
 
         private KeyboardState oldState;
+        private int oldMouseScroll;
 
         #region Get/Set methods
+        public float CamZoom
+        {
+            get { return camZoom; }
+        }
+
         public Vector3 CamPos
         {
             get { return camPos; }
@@ -104,7 +110,7 @@ namespace Cubes
             mouseY = mouseLockedY = Game.Window.ClientBounds.Height / 2;
 
             Mouse.SetPosition(mouseX, mouseY);
-
+            oldMouseScroll = Mouse.GetState().ScrollWheelValue;
 
             base.Initialize();
         }
@@ -131,7 +137,17 @@ namespace Cubes
             MouseState mouse = Mouse.GetState();
 
             #region Mouse logic
-            camZoom = 1.0f - (0.001f * mouse.ScrollWheelValue);
+            if (oldMouseScroll < mouse.ScrollWheelValue)
+                camZoom -= 0.05f;
+            if (oldMouseScroll > mouse.ScrollWheelValue)
+                camZoom += 0.05f;
+            if (camZoom > 1.50f)
+                camZoom = 1.50f;
+            else if (camZoom < 0.50f)
+                camZoom = 0.50f;
+
+            oldMouseScroll = mouse.ScrollWheelValue;
+
             if (ButtonState.Pressed.Equals(mouse.LeftButton) && Game.IsActive)
             {
                 Mouse.SetPosition(mouseLockedX, mouseLockedY);

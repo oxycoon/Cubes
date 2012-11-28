@@ -19,6 +19,7 @@ namespace Cubes
         GraphicsDeviceManager graphics;
         GraphicsDevice device;
         SpriteBatch spriteBatch;
+        SpriteFont spriteFont;
 
         private Crane theCrane;
         private Hook theHook;
@@ -109,6 +110,7 @@ namespace Cubes
 
             // TODO: use this.Content to load your game content here
             effect = Content.Load<Effect>("MyEffect");
+            spriteFont = Content.Load<SpriteFont>("font");
 
             theCrane.Model = LoadModel("Models\\Crane");
             theCrane.CraneTexture = Content.Load<Texture2D>("Textures\\Texture_Crane");
@@ -190,8 +192,12 @@ namespace Cubes
 
             matrixStack.Pop();
             matrixStack.Pop();
-            
-            
+
+            #region SpriteBatch
+            //spriteBatch.Begin();
+            //spriteBatch.DrawString(spriteFont, theCamera.CamZoom.ToString(), new Vector2(10.0f, 10.0f), Color.Black);
+            //spriteBatch.End();
+            #endregion
             base.Draw(gameTime);
         }
     }
