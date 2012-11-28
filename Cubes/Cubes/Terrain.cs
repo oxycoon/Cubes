@@ -47,7 +47,7 @@ namespace Cubes
 
         private Texture2D terrTex;
 
-        public Texture2D TerrTex
+        public Texture2D Texture
         {
             get { return terrTex; }
             set { terrTex = value; }
@@ -76,7 +76,7 @@ namespace Cubes
         {
             // TODO: Add your initialization code here
             GenerateTerrain();
-            setupLighting();
+            SetupLighting();
             base.Initialize();
         }
 
@@ -193,7 +193,7 @@ namespace Cubes
                 vertices[i].Normal.Normalize();
         }
 
-        private void setupLighting()
+        private void SetupLighting()
         {
             ambientLight = new Vector3(1.0f, 1.0f, 1.0f);
             ambientMaterial = new Vector3(0.7f, 0.7f, 0.7f);

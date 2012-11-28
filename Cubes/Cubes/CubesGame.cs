@@ -108,18 +108,30 @@ namespace Cubes
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            theCrane.Model = Content.Load<Model>("Crane");
+            effect = Content.Load<Effect>("MyEffect");
+
+            theCrane.Model = LoadModel("Crane");
             theHook.Model = Content.Load<Model>("Hook");
             theHook.WireModel = Content.Load<Model>("Wire");
             theSky.Model = Content.Load<Model>("dome");
 
-            theTerrain.TerrTex = Content.Load<Texture2D>("MC_Dirt");
+            theTerrain.Texture = Content.Load<Texture2D>("MC_Dirt");
+            theCrane.Texture = Content.Load<Texture2D>("Texture_Crane");
             theSky.Texture = Content.Load<Texture2D>("clouds2");
 
-            effect = Content.Load<Effect>("MyEffect");
-            
+            theCrane.Effect = effect;
             theSky.Device = device;
             theSky.Effect = effect;
+        }
+
+        private Model LoadModel(String name)
+        {
+            Model newModel = Content.Load<Model>(name);
+
+            foreach (ModelMesh mesh in newModel.Meshes)
+                foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                    meshPart.Effect = effect;
+            return newModel;
         }
 
         /// <summary>

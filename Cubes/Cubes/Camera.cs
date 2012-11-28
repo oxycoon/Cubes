@@ -36,7 +36,10 @@ namespace Cubes
         private float spinrate = 3.0f;
 
         private int mouseX, mouseY, mouseLockedX, mouseLockedY;
+        private bool lockedCamera = true;
         private Game game;
+
+        private KeyboardState oldState;
 
         #region Get/Set methods
         public Vector3 CamPos
@@ -155,14 +158,18 @@ namespace Cubes
                 game.IsMouseVisible = true;
             }
             #endregion
-            #region Keyboard rotation logic
-            if (input.KeyboardState.IsKeyDown(Keys.Right) || input.KeyboardState.IsKeyDown(Keys.D))
+            #region Keyboard input logic
+            if (input.KeyboardState.IsKeyDown(Keys.Right) || input.KeyboardState.IsKeyDown(Keys.D) && lockedCamera)
             {
                 Rotate(MathHelper.ToDegrees(-0.03f));
             }
-            if (input.KeyboardState.IsKeyDown(Keys.Left) || input.KeyboardState.IsKeyDown(Keys.A))
+            if (input.KeyboardState.IsKeyDown(Keys.Left) || input.KeyboardState.IsKeyDown(Keys.A) && lockedCamera)
             {
                 Rotate(MathHelper.ToDegrees(0.03f));
+            }
+            if (checkKeyState(Keys.C)) 
+            {
+                lockedCamera = !lockedCamera;
             }
 
             #endregion
@@ -196,7 +203,15 @@ namespace Cubes
 
             Matrix.CreateLookAt(ref camPos, ref camTar, ref camUp, out view);
 
+            oldState = input.KeyboardState;
             base.Update(gameTime);
+        }
+
+        private bool checkKeyState(Keys key)
+        {
+            if (input.KeyboardState.IsKeyUp(key) && oldState.IsKeyDown(key))
+                return true;
+            return false;
         }
     }
 }

@@ -18,10 +18,13 @@ namespace Cubes
     public class Crane : Microsoft.Xna.Framework.GameComponent
     {
         private Model theCraneModel;
+        private Texture2D theCraneTexture;
+        private Effect effect;
         private IInputHandler input;
         private Camera camera;
 
         private float rotation = 0.0f;
+        private Vector3 ambientLight, ambientMaterial, diffuseLight, diffuseMaterial, lightDirection;
 
         #region Get/Set methods
         public float Rotation
@@ -34,6 +37,18 @@ namespace Cubes
         {
             get { return theCraneModel; }
             set { theCraneModel = value; }
+        }
+
+        public Texture2D Texture
+        {
+            get { return theCraneTexture; }
+            set { theCraneTexture = value; }
+        }
+
+        public Effect Effect
+        {
+            get { return effect; }
+            set { effect = value; }
         }
         #endregion
 
@@ -52,8 +67,17 @@ namespace Cubes
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-
+            SetupLighting();
             base.Initialize();
+        }
+
+        private void SetupLighting()
+        {
+            ambientLight = new Vector3(1.0f, 1.0f, 1.0f);
+            ambientMaterial = new Vector3(0.7f, 0.7f, 0.7f);
+            diffuseLight = new Vector3(1.0f, 1.0f, 1.0f);
+            diffuseMaterial = new Vector3(0.4f, 0.7f, 0.6f);
+            lightDirection = new Vector3(1.0f, -1.0f, -1.0f);
         }
 
         /// <summary>
@@ -94,7 +118,32 @@ namespace Cubes
             //isrot, identify, scale, rotation, orbit, translation
             world = matScale * matY * matTrans;
 
-            theCraneModel.Draw(world, camera.View, camera.Projection);
+            effect.CurrentTechnique = effect.Techniques["PhongTexturedShader"];
+
+            Matrix[] modelTransformations = new Matrix[theCraneModel.Bones.Count];
+            theCraneModel.CopyAbsoluteBoneTransformsTo(modelTransformations);
+
+            foreach (ModelMesh mm in theCraneModel.Meshes)
+            {
+                foreach (Effect currentEffect in mm.Effects)
+                {
+                    currentEffect.CurrentTechnique = effect.CurrentTechnique;
+                    currentEffect.Parameters["xWorld"].SetValue(modelTransformations[mm.ParentBone.Index] * world);
+                    currentEffect.Parameters["xView"].SetValue(camera.View);
+                    currentEffect.Parameters["xProjection"].SetValue(camera.Projection);
+                    currentEffect.Parameters["xEnableLightingTexture"].SetValue(true);
+                    currentEffect.Parameters["xDiffuseLight"].SetValue(diffuseLight);
+                    currentEffect.Parameters["xDiffuseMaterial"].SetValue(diffuseMaterial);
+                    currentEffect.Parameters["xAmbientLight"].SetValue(ambientLight);
+                    currentEffect.Parameters["xAmbientMaterial"].SetValue(ambientMaterial);
+                    currentEffect.Parameters["xLightDirection"].SetValue(lightDirection);
+                    currentEffect.Parameters["xTexture"].SetValue(theCraneTexture);
+                }
+                mm.Draw();
+            }
+
+
+            //theCraneModel.Draw(world, camera.View, camera.Projection);
 
             return world;
         }
