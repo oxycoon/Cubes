@@ -139,6 +139,7 @@ namespace Cubes
                     currentEffect.Parameters["xLightDirection"].SetValue(lightDirection);
                     currentEffect.Parameters["xTexture"].SetValue(theCraneTexture);
                 }
+                
                 mm.Draw();
             }
 

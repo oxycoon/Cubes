@@ -179,6 +179,7 @@ namespace Cubes
             theTerrain.Draw(gameTime, effect, device);
             theSky.Draw(view, projection);
 
+            device.BlendState = BlendState.AlphaBlend;
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
             matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek(), theCrane.Rotation));
 
