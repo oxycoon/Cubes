@@ -111,19 +111,15 @@ namespace Cubes
             theCrane.Model = Content.Load<Model>("Crane");
             theHook.Model = Content.Load<Model>("Hook");
             theHook.WireModel = Content.Load<Model>("Wire");
+            theSky.Model = Content.Load<Model>("dome");
+
             theTerrain.TerrTex = Content.Load<Texture2D>("MC_Dirt");
+            theSky.Texture = Content.Load<Texture2D>("clouds2");
 
             effect = Content.Load<Effect>("MyEffect");
             
-            theSky.Model = Content.Load<Model>("dome");
-            theSky.Texture = Content.Load<Texture2D>("clouds2");
             theSky.Device = device;
             theSky.Effect = effect;
-
-            //theTerrain.TerrTex = Content.Load<Texture2D>("Dirt");
-
-
-
         }
 
         /// <summary>
@@ -162,6 +158,7 @@ namespace Cubes
             // TODO: Add your drawing code here
             view = theCamera.View;
             projection = theCamera.Projection;
+            world = Matrix.Identity;
 
             effect.Parameters["xWorld"].SetValue(Matrix.Identity);
             effect.Parameters["xProjection"].SetValue(projection);

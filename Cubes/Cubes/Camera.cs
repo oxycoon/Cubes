@@ -80,7 +80,7 @@ namespace Cubes
             this.game = game;
         }
 
-        public void Rotate(float degrees)
+        private void Rotate(float degrees)
         {
             yaw += degrees;
         }
