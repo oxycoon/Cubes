@@ -111,13 +111,18 @@ namespace Cubes
             effect = Content.Load<Effect>("MyEffect");
 
             theCrane.Model = LoadModel("Crane");
+            theCrane.CraneTexture = Content.Load<Texture2D>("Texture_Crane");
+            theCrane.WeightTexture = Content.Load<Texture2D>("Concrete");
+            theCrane.BaseTexture = Content.Load<Texture2D>("Concrete");
+            theCrane.WireTexture = Content.Load<Texture2D>("SupportWire");
+
             theHook.Model = Content.Load<Model>("Hook");
             theHook.WireModel = Content.Load<Model>("Wire");
+
             theSky.Model = Content.Load<Model>("dome");
+            theSky.Texture = Content.Load<Texture2D>("clouds2");
 
             theTerrain.Texture = Content.Load<Texture2D>("MC_Dirt");
-            theCrane.Texture = Content.Load<Texture2D>("Texture_Crane");
-            theSky.Texture = Content.Load<Texture2D>("clouds2");
 
             theCrane.Effect = effect;
             theSky.Device = device;
@@ -179,6 +184,7 @@ namespace Cubes
             theTerrain.Draw(gameTime, effect, device);
             theSky.Draw(view, projection);
 
+            device.BlendState = BlendState.AlphaBlend;
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
             matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek(), theCrane.Rotation));
 

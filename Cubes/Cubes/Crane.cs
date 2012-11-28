@@ -18,7 +18,7 @@ namespace Cubes
     public class Crane : Microsoft.Xna.Framework.GameComponent
     {
         private Model theCraneModel;
-        private Texture2D theCraneTexture;
+        private Texture2D theCraneTexture, theWeightTexture, theWireTexture, theBaseTexture;
         private Effect effect;
         private IInputHandler input;
         private Camera camera;
@@ -39,10 +39,28 @@ namespace Cubes
             set { theCraneModel = value; }
         }
 
-        public Texture2D Texture
+        public Texture2D CraneTexture
         {
             get { return theCraneTexture; }
             set { theCraneTexture = value; }
+        }
+
+        public Texture2D WeightTexture
+        {
+            get { return theWeightTexture; }
+            set { theWeightTexture = value; }
+        }
+
+        public Texture2D BaseTexture
+        {
+            get { return theBaseTexture; }
+            set { theBaseTexture = value; }
+        }
+
+        public Texture2D WireTexture
+        {
+            get { return theWireTexture; }
+            set { theWireTexture = value; }
         }
 
         public Effect Effect
@@ -137,8 +155,17 @@ namespace Cubes
                     currentEffect.Parameters["xAmbientLight"].SetValue(ambientLight);
                     currentEffect.Parameters["xAmbientMaterial"].SetValue(ambientMaterial);
                     currentEffect.Parameters["xLightDirection"].SetValue(lightDirection);
-                    currentEffect.Parameters["xTexture"].SetValue(theCraneTexture);
+
+                    if (mm.Name.Equals("Weight"))
+                        currentEffect.Parameters["xTexture"].SetValue(theWeightTexture);
+                    else if (mm.Name.Equals("Base"))
+                        currentEffect.Parameters["xTexture"].SetValue(theBaseTexture);
+                    else if (mm.Name.Equals("TopWire"))
+                        currentEffect.Parameters["xTexture"].SetValue(theWireTexture);
+                    else
+                        currentEffect.Parameters["xTexture"].SetValue(theCraneTexture);
                 }
+                
                 mm.Draw();
             }
 
