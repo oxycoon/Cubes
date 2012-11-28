@@ -42,14 +42,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Crane.FBX">
+    <Compile Include="Models\Crane.FBX">
       <Name>Crane</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Hook.FBX">
+    <Compile Include="Models\Hook.FBX">
       <Name>Hook</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
@@ -63,57 +63,64 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MC_Dirt.png">
+    <Compile Include="Textures\MC_Dirt.png">
       <Name>MC_Dirt</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Wire.FBX">
+    <Compile Include="Models\Wire.FBX">
       <Name>Wire</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="dome.x">
+    <Compile Include="Models\dome.x">
       <Name>dome</Name>
       <Importer>XImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="clouds1.jpg">
+    <Compile Include="Textures\clouds1.jpg">
       <Name>clouds1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="clouds2.png">
+    <Compile Include="Models\clouds2.png">
       <Name>clouds2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Texture_Crane.png">
+    <Compile Include="Textures\Texture_Crane.png">
       <Name>Texture_Crane</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Concrete.jpg">
+    <Compile Include="Textures\Concrete.jpg">
       <Name>Concrete</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SupportWire.png">
+    <Compile Include="Textures\SupportWire.png">
       <Name>SupportWire</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\clouds2.png">
+      <Name>clouds2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

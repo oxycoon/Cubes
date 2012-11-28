@@ -110,19 +110,19 @@ namespace Cubes
             // TODO: use this.Content to load your game content here
             effect = Content.Load<Effect>("MyEffect");
 
-            theCrane.Model = LoadModel("Crane");
-            theCrane.CraneTexture = Content.Load<Texture2D>("Texture_Crane");
-            theCrane.WeightTexture = Content.Load<Texture2D>("Concrete");
-            theCrane.BaseTexture = Content.Load<Texture2D>("Concrete");
-            theCrane.WireTexture = Content.Load<Texture2D>("SupportWire");
+            theCrane.Model = LoadModel("Models\\Crane");
+            theCrane.CraneTexture = Content.Load<Texture2D>("Textures\\Texture_Crane");
+            theCrane.WeightTexture = Content.Load<Texture2D>("Textures\\Concrete");
+            theCrane.BaseTexture = Content.Load<Texture2D>("Textures\\Concrete");
+            theCrane.WireTexture = Content.Load<Texture2D>("Textures\\SupportWire");
 
-            theHook.Model = Content.Load<Model>("Hook");
-            theHook.WireModel = Content.Load<Model>("Wire");
+            theHook.Model = Content.Load<Model>("Models\\Hook");
+            theHook.WireModel = Content.Load<Model>("Models\\Wire");
 
-            theSky.Model = Content.Load<Model>("dome");
-            theSky.Texture = Content.Load<Texture2D>("clouds2");
+            theSky.Model = Content.Load<Model>("Models\\dome");
+            theSky.Texture = Content.Load<Texture2D>("Textures\\clouds2");
 
-            theTerrain.Texture = Content.Load<Texture2D>("MC_Dirt");
+            theTerrain.Texture = Content.Load<Texture2D>("Textures\\MC_Dirt");
 
             theCrane.Effect = effect;
             theSky.Device = device;

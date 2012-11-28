@@ -29,10 +29,11 @@ namespace Cubes
         private Vector3 camTar = new Vector3(0.0f, 50.0f, 0.0f);
         private Vector3 camUp = Vector3.Up;
         private Vector3 camRef = new Vector3(0.0f, 0.0f, -1.0f);
-        private float camZoom = 1.0f;
+        
 
         private float yaw = 0.0f;
         private float pitch = 0.0f;
+        private float camZoom = 1.0f;
 
         private float spinrate = 3.0f;
 
@@ -128,9 +129,10 @@ namespace Cubes
             float timeDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             MouseState mouse = Mouse.GetState();
-            camZoom = 1.0f + (0.001f * mouse.ScrollWheelValue);
+            
 
-            #region Mouse rotation logic
+            #region Mouse logic
+            camZoom = 1.0f + (0.001f * mouse.ScrollWheelValue);
             if (ButtonState.Pressed.Equals(mouse.LeftButton) && Game.IsActive)
             {
                 Mouse.SetPosition(mouseLockedX, mouseLockedY);
@@ -196,11 +198,10 @@ namespace Cubes
             #endregion
 
             Matrix rotMat = Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(yaw), MathHelper.ToRadians(pitch), 1.0f);
+            Vector3 tempCamRef = Vector3.Multiply(camRef, camZoom);
 
             Vector3 transRef;
-            Vector3.Transform(ref camRef, ref rotMat, out transRef);
-
-            //+ ((camPos - camTar) * camZoom)
+            Vector3.Transform(ref tempCamRef, ref rotMat, out transRef);
 
             camPos = transRef;
 
