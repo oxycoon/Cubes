@@ -24,7 +24,6 @@ namespace Cubes
         private Camera camera;
 
         private float rotation = 0.0f;
-        private Vector3 ambientLight, ambientMaterial, diffuseLight, diffuseMaterial, lightDirection;
 
         #region Get/Set methods
         public float Rotation
@@ -85,17 +84,7 @@ namespace Cubes
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-            SetupLighting();
             base.Initialize();
-        }
-
-        private void SetupLighting()
-        {
-            ambientLight = new Vector3(1.0f, 1.0f, 1.0f);
-            ambientMaterial = new Vector3(0.7f, 0.7f, 0.7f);
-            diffuseLight = new Vector3(1.0f, 1.0f, 1.0f);
-            diffuseMaterial = new Vector3(0.4f, 0.7f, 0.6f);
-            lightDirection = new Vector3(1.0f, -1.0f, -1.0f);
         }
 
         /// <summary>
@@ -150,11 +139,11 @@ namespace Cubes
                     currentEffect.Parameters["xView"].SetValue(camera.View);
                     currentEffect.Parameters["xProjection"].SetValue(camera.Projection);
                     currentEffect.Parameters["xEnableLightingTexture"].SetValue(true);
-                    currentEffect.Parameters["xDiffuseLight"].SetValue(diffuseLight);
-                    currentEffect.Parameters["xDiffuseMaterial"].SetValue(diffuseMaterial);
-                    currentEffect.Parameters["xAmbientLight"].SetValue(ambientLight);
-                    currentEffect.Parameters["xAmbientMaterial"].SetValue(ambientMaterial);
-                    currentEffect.Parameters["xLightDirection"].SetValue(lightDirection);
+                    currentEffect.Parameters["xDiffuseLight"].SetValue(LightSettings.DiffuseLight);
+                    currentEffect.Parameters["xDiffuseMaterial"].SetValue(LightSettings.DiffuseMaterial);
+                    currentEffect.Parameters["xAmbientLight"].SetValue(LightSettings.AmbientLight);
+                    currentEffect.Parameters["xAmbientMaterial"].SetValue(LightSettings.AmbientMaterial);
+                    currentEffect.Parameters["xLightDirection"].SetValue(LightSettings.LightDirection);
 
                     if (mm.Name.Equals("Weight"))
                         currentEffect.Parameters["xTexture"].SetValue(theWeightTexture);
