@@ -27,6 +27,12 @@ namespace Cubes
             set { move = value; }
         }
         private float fallSpeed = 0;
+
+        public float FallSpeed
+        {
+            get { return fallSpeed; }
+            set { fallSpeed = value; }
+        }
         private IInputHandler input;
         public Boolean Hooked
         {
@@ -155,7 +161,7 @@ namespace Cubes
             if (hooked)
             {
                 matScale = Matrix.CreateScale(5.0f);
-                matCubeTrans = Matrix.CreateTranslation(new Vector3(0.0f, -50.0f, 0.0f));
+                matCubeTrans = Matrix.CreateTranslation(new Vector3(0.0f, -65.0f, 0.0f));
                 //matCubeOrbit = matCubeTrans * Matrix.CreateRotationY(craneRotation);             
                 matWorld = matScale * matCubeTrans * world;
                 
@@ -185,7 +191,7 @@ namespace Cubes
             if (maxScale < scaling.Z)
                 maxScale = scaling.Z;
 
-            float transformedSphereRadius = (originalBoundingSphere.Radius * maxScale) * 0.45f;
+            float transformedSphereRadius = (originalBoundingSphere.Radius * maxScale) * 0.44f;
             Vector3 transformedSphereCenter = Vector3.Transform(originalBoundingSphere.Center, transformationMatrix);
 
             BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);

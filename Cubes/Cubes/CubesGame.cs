@@ -23,18 +23,25 @@ namespace Cubes
 
         private Crane theCrane;
         private Hook theHook;
-        private Cube theCube;
         private Terrain theTerrain;
         private List<Cube> theCubeList = new List<Cube>();
         private InputHandler input;
         private Camera theCamera;
         private SkyDome theSky;
 
+        private Texture2D boxIcon;
+        private Texture2D magnetIcon;
+        private Texture2D camLock;
+
 
         private Matrix world, view, projection;
         private Stack<Matrix> matrixStack = new Stack<Matrix>();
 
         private KeyboardState oldState;
+
+        private SpriteBatch hudDrawer;
+        private SpriteFont hudFont;
+        private DepthStencilState dsState;
    
 
         //BasicEffect effect;
@@ -66,9 +73,6 @@ namespace Cubes
             theSky = new SkyDome(this);
             this.Components.Add(theSky);
 
-            theCube = new Cube(this);
-            this.Components.Add(theCube);
-            theCubeList.Add(theCube);
         }
 
         /// <summary>
@@ -87,6 +91,8 @@ namespace Cubes
 
             base.Initialize();
         }
+
+
 
         #region Initialize methods
         private void initDevice()
@@ -131,13 +137,19 @@ namespace Cubes
             theSky.Model = Content.Load<Model>("Models\\dome");
             theSky.Texture = Content.Load<Texture2D>("Textures\\clouds2");
 
-            theCube.Model = Content.Load<Model>("Models\\testCube2");
-
             theTerrain.Texture = Content.Load<Texture2D>("Textures\\MC_Dirt");
 
             theCrane.Effect = effect;
             theSky.Device = device;
             theSky.Effect = effect;
+
+            hudFont = Content.Load<SpriteFont>("font");
+            hudDrawer = new SpriteBatch( graphics.GraphicsDevice );
+
+            boxIcon = Content.Load<Texture2D>("Sprites\\boxCarry");
+            magnetIcon = Content.Load<Texture2D>("Sprites\\magnetPower");
+            camLock = Content.Load<Texture2D>("Sprites\\camLock");
+
         }
 
         private Model LoadModel(String name)
@@ -175,15 +187,19 @@ namespace Cubes
             if (input.KeyboardState.IsKeyDown(Keys.T) && input.KeyboardState != oldState)
             {
                 Random rnd = new Random();
-                Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
-                tmp.Model = Content.Load<Model>("Models\\testCube2");
+                //Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
+                Cube tmp = new Cube(this, new Vector3(50, 300, 0));
+                tmp.Model = Content.Load<Model>("Models\\Cube2");
                 this.Components.Add(tmp);
                 theCubeList.Add(tmp);
        
             }
 
+
             foreach (Cube c1 in theCubeList)
             {
+                List<Cube> collideList = new List<Cube>();
+                float lowY = c1.World.Translation.Y;
                 if (theHook.Active && !c1.Hooked && !theHook.HasBlock)
                 {
                     c1.Hooked = theHook.HasBlock = checkHookCubeCollision(c1);
@@ -195,12 +211,36 @@ namespace Cubes
 
                 foreach (Cube c2 in theCubeList)
                 {
+                    
                     if (!c1.Equals(c2))
                     {
+                        
                         if (checkCubeCollision(c1, c2))
                         {
-                            c1.Move = false;
-                            break;
+                            Vector3 c1Pos = c1.World.Translation;
+                            Vector3 c2Pos = c2.World.Translation;
+                            if (c1Pos.Y < c2Pos.Y && !c1.Hooked && !c2.Hooked)
+                            {
+                                collideList.Add(c2);
+                                foreach (Cube cLow in collideList)
+                                {
+                                    if (cLow.World.Translation.Y < lowY)
+                                    {
+                                        lowY = cLow.World.Translation.Y;
+                                    }
+                                }
+                                if (c1.World.Translation.Y > lowY)
+                                {
+                                    c1.Move = true;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                c1.Move = false;
+                                c1.FallSpeed = 0;
+                                break;
+                            }
                         }
                         else
                         {
@@ -248,9 +288,43 @@ namespace Cubes
             matrixStack.Pop();
 
             #region SpriteBatch
-            //spriteBatch.Begin();
-            //spriteBatch.DrawString(spriteFont, theCamera.CamZoom.ToString(), new Vector2(20.0f, 20.0f), Color.Black);
-            //spriteBatch.End();
+            dsState = new DepthStencilState();
+            dsState.DepthBufferWriteEnable = false;
+            device.DepthStencilState = dsState;
+
+            hudDrawer.Begin();
+            String output = "Blocks on map: " + theCubeList.Count;
+            hudDrawer.DrawString(hudFont, output, new Vector2(20, 20), Color.White);
+            if (theHook.HasBlock)
+            {
+                hudDrawer.Draw(boxIcon, new Rectangle((device.Viewport.Width / 2) - 50, device.Viewport.Height - 50, 32, 32), new Rectangle(0, 32, 32, 32), Color.White);
+            }
+            else
+            {
+                hudDrawer.Draw(boxIcon, new Rectangle((device.Viewport.Width / 2) - 50, device.Viewport.Height - 50, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            }
+            if (theHook.Active)
+            {
+                hudDrawer.Draw(magnetIcon, new Rectangle((device.Viewport.Width / 2) + 50, device.Viewport.Height - 50, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            }
+            else
+            {
+                hudDrawer.Draw(magnetIcon, new Rectangle((device.Viewport.Width / 2) + 50, device.Viewport.Height - 50, 32, 32), new Rectangle(0, 32, 32, 32), Color.White);
+            }
+
+            if(theCamera.LockedCamera)
+            {
+                hudDrawer.Draw(camLock, new Rectangle((device.Viewport.Width / 2), device.Viewport.Height - 50, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            }
+            else
+            {
+                hudDrawer.Draw(camLock, new Rectangle((device.Viewport.Width / 2), device.Viewport.Height - 50, 32, 32), new Rectangle(0, 32, 32, 32), Color.White);
+            }
+            hudDrawer.End();
+
+            dsState = new DepthStencilState();
+            dsState.DepthBufferWriteEnable = true;
+            device.DepthStencilState = dsState;
             #endregion
             base.Draw(gameTime);
         }
