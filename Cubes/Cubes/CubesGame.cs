@@ -23,6 +23,7 @@ namespace Cubes
 
         private Crane theCrane;
         private Hook theHook;
+        private Cube theCube;
         private Terrain theTerrain;
         private List<Cube> theCubeList;
         private InputHandler input;
@@ -32,6 +33,7 @@ namespace Cubes
         private Matrix world, view, projection;
         private Stack<Matrix> matrixStack = new Stack<Matrix>();
 
+        private int debug = 0;
 
         //BasicEffect effect;
         Effect effect;
@@ -62,6 +64,8 @@ namespace Cubes
             theSky = new SkyDome(this);
             this.Components.Add(theSky);
 
+            theCube = new Cube(this);
+            this.Components.Add(theCube);
         }
 
         /// <summary>
@@ -124,6 +128,8 @@ namespace Cubes
             theSky.Model = Content.Load<Model>("Models\\dome");
             theSky.Texture = Content.Load<Texture2D>("Textures\\clouds2");
 
+            theCube.Model = Content.Load<Model>("Models\\testCube2");
+
             theTerrain.Texture = Content.Load<Texture2D>("Textures\\MC_Dirt");
 
             theCrane.Effect = effect;
@@ -185,10 +191,33 @@ namespace Cubes
 
             theTerrain.Draw(gameTime, effect, device);
             theSky.Draw(view, projection);
+            
+
+            
+
+            BoundingSphere s1 = (BoundingSphere)theHook.Model.Tag;
+            BoundingSphere s2 = (BoundingSphere)theCube.Model.Tag;
+            
+            BoundingSphere ss1 = TransformBoundingSphere(s1, theHook.World);
+            BoundingSphere ss2 = TransformBoundingSphere(s2, theCube.World);
+
+            if (Hook.Active)
+            {
+                if (ss1.Intersects(ss2))
+                {
+
+                    theCube.Hooked = true;
+                }
+                else
+                {
+                    theCube.Hooked = false;
+                }
+            }
 
             device.BlendState = BlendState.AlphaBlend;
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
             matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek(), theCrane.Rotation));
+            theCube.Draw(matrixStack.Peek(), theCamera, theCrane.Rotation);
 
             matrixStack.Pop();
             matrixStack.Pop();
@@ -199,6 +228,27 @@ namespace Cubes
             //spriteBatch.End();
             #endregion
             base.Draw(gameTime);
+        }
+
+        private static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
+        {
+            Vector3 trans;
+            Vector3 scaling;
+            Quaternion rot;
+            transformationMatrix.Decompose(out scaling, out rot, out trans);
+
+            float maxScale = scaling.X;
+            if (maxScale < scaling.Y)
+                maxScale = scaling.Y;
+            if (maxScale < scaling.Z)
+                maxScale = scaling.Z;
+
+            float transformedSphereRadius = originalBoundingSphere.Radius * maxScale;
+            Vector3 transformedSphereCenter = Vector3.Transform(originalBoundingSphere.Center, transformationMatrix);
+
+            BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);
+
+            return transformedBoundingSphere;
         }
     }
 }

@@ -17,18 +17,60 @@ namespace Cubes
     /// </summary>
     public class Hook : Microsoft.Xna.Framework.GameComponent
     {
-        private Model theHookModel;
+        private Matrix world;
+
+        public Matrix World
+        {
+            get { return world; }
+            set { world = value; }
+        }
+
+        private Matrix[] meshMatrix;
+
+        public Matrix[] MeshMatrix
+        {
+            get { return meshMatrix; }
+            set { meshMatrix = value; }
+        }
+
+        private static Boolean active = false;
+
+        public static Boolean Active
+        {
+            get { return Hook.active; }
+            set { Hook.active = value; }
+        }
+        private Model model;
         private Model theWireModel;
         private IInputHandler input;
 
-        //private Vector3 position;
+        private Vector3 position;
 
-        private float xPos, yPos;
+        public Vector3 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
 
         public Model Model
         {
-            get { return theHookModel; }
-            set { theHookModel = value; }
+            get { return model; }
+            set 
+            {
+                model = value;
+                meshMatrix = new Matrix[model.Bones.Count];
+                model.CopyAbsoluteBoneTransformsTo(meshMatrix);
+
+                BoundingSphere compMeshSphere = new BoundingSphere();
+
+                foreach (ModelMesh mesh in model.Meshes)
+                {
+                    BoundingSphere orgiMeshSphere = mesh.BoundingSphere;
+                    orgiMeshSphere = TransformBoundingSphere(orgiMeshSphere, meshMatrix[mesh.ParentBone.Index]);
+                    compMeshSphere = BoundingSphere.CreateMerged(compMeshSphere, orgiMeshSphere);
+                }
+                model.Tag = compMeshSphere;
+            }
         }
 
         public Model WireModel
@@ -69,29 +111,34 @@ namespace Cubes
             // TODO: Add your update code here
             if (input.KeyboardState.IsKeyDown(Keys.W))
             {
-                xPos -= 1.0f;
+                position.X -= 1.0f;
             }
             if (input.KeyboardState.IsKeyDown(Keys.S))
             {
-                xPos += 1.0f;
+                position.X += 1.0f;
             }
             if (input.KeyboardState.IsKeyDown(Keys.R))
             {
-                yPos -= 1.0f;
+                position.Y -= 1.0f;
             }
             if (input.KeyboardState.IsKeyDown(Keys.F))
             {
-                yPos += 1.0f;
+                position.Y += 1.0f;
             }
 
-            if (yPos > 75.0f)
-                yPos = 75.0f;
-            if (yPos < 0.0f)
-                yPos = 0.0f;
-            if (xPos > 90.0f)
-                xPos = 90.0f;
-            if (xPos < 10.0f)
-                xPos = 10.0f;
+            if (input.KeyboardState.IsKeyDown(Keys.X))
+            {
+                active = !active;
+            }
+
+            if (position.Y > 75.0f)
+                position.Y = 75.0f;
+            if (position.Y < 0.0f)
+                position.Y = 0.0f;
+            if (position.X > 90.0f)
+                position.X = 90.0f;
+            if (position.X < 10.0f)
+                position.X = 10.0f;
 
             base.Update(gameTime);
         }
@@ -108,19 +155,41 @@ namespace Cubes
             Matrix matHookTrans, matHookScale, matHookOrbit, hookWorld, matWireScale, matWireTrans, matWireOrb, wireWorld;
 
             matHookScale = Matrix.CreateScale(20.0f);
-            matHookTrans = Matrix.CreateTranslation(0.0f, 80.0f - yPos, 100.0f - xPos);
+            matHookTrans = Matrix.CreateTranslation(0.0f, 80.0f - position.Y, 100.0f - position.X);
             matHookOrbit = matHookTrans * Matrix.CreateRotationY(craneRotation);
             hookWorld = _world * matHookScale * matHookOrbit;
 
-            matWireScale = Matrix.CreateScale(new Vector3(5.0f, yPos*2, 5.0f));
-            matWireTrans = Matrix.CreateTranslation(0.0f, 86.0f - yPos, 100 - xPos);
+            matWireScale = Matrix.CreateScale(new Vector3(5.0f, position.Y*2, 5.0f));
+            matWireTrans = Matrix.CreateTranslation(0.0f, 86.0f - position.Y, 100 - position.X);
             matWireOrb = matWireTrans * Matrix.CreateRotationY(craneRotation);
             wireWorld = _world * matWireScale * matWireOrb;
+            world = hookWorld;
 
-            theHookModel.Draw(hookWorld, camera.View, camera.Projection);
+            model.Draw(hookWorld, camera.View, camera.Projection);
             theWireModel.Draw(wireWorld, camera.View, camera.Projection);
 
             return hookWorld;
+        }
+
+        public static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
+        {
+            Vector3 trans;
+            Vector3 scaling;
+            Quaternion rot;
+            transformationMatrix.Decompose(out scaling, out rot, out trans);
+
+            float maxScale = scaling.X;
+            if (maxScale < scaling.Y)
+                maxScale = scaling.Y;
+            if (maxScale < scaling.Z)
+                maxScale = scaling.Z;
+
+            float transformedSphereRadius = originalBoundingSphere.Radius * maxScale;
+            Vector3 transformedSphereCenter = Vector3.Transform(originalBoundingSphere.Center, transformationMatrix);
+
+            BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);
+
+            return transformedBoundingSphere;
         }
     }
 }
