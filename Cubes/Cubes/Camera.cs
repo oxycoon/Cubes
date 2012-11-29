@@ -39,6 +39,12 @@ namespace Cubes
 
         private int mouseX, mouseY, mouseLockedX, mouseLockedY;
         private bool lockedCamera = true;
+
+        public bool LockedCamera
+        {
+            get { return lockedCamera; }
+            set { lockedCamera = value; }
+        }
         private Game game;
 
         private KeyboardState oldState;
