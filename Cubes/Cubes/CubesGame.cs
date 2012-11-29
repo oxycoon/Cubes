@@ -30,10 +30,12 @@ namespace Cubes
         private Camera theCamera;
         private SkyDome theSky;
 
+
         private Matrix world, view, projection;
         private Stack<Matrix> matrixStack = new Stack<Matrix>();
 
-        private int debug = 0;
+        private KeyboardState oldState;
+   
 
         //BasicEffect effect;
         Effect effect;
@@ -170,7 +172,7 @@ namespace Cubes
 
             // TODO: Add your update logic here
 
-            if (input.KeyboardState.IsKeyDown(Keys.T))
+            if (input.KeyboardState.IsKeyDown(Keys.T) && input.KeyboardState != oldState)
             {
                 Random rnd = new Random();
                 Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
@@ -180,18 +182,35 @@ namespace Cubes
        
             }
 
-            foreach (Cube c in theCubeList)
+            foreach (Cube c1 in theCubeList)
             {
-                if (theHook.Active && !c.Hooked)
+                if (theHook.Active && !c1.Hooked && !theHook.HasBlock)
                 {
-                    c.Hooked = checkCollision(c);
+                    c1.Hooked = theHook.HasBlock = checkHookCubeCollision(c1);
                 }
                 else if (!theHook.Active)
                 {
-                    c.Hooked = false;
+                    c1.Hooked = false;
+                }
+
+                foreach (Cube c2 in theCubeList)
+                {
+                    if (!c1.Equals(c2))
+                    {
+                        if (checkCubeCollision(c1, c2))
+                        {
+                            c1.Move = false;
+                            break;
+                        }
+                        else
+                        {
+                            c1.Move = true;
+                        }
+                    }
                 }
             }
 
+            oldState = input.KeyboardState;
             base.Update(gameTime);
         }
 
@@ -236,10 +255,21 @@ namespace Cubes
             base.Draw(gameTime);
         }
 
-        private bool checkCollision(Cube cube)
+        private bool checkCubeCollision(Cube cube1, Cube cube2)
+        {
+            BoundingBox cube1Sphere = TransformBoundingBox((BoundingSphere)cube1.Model.Tag, cube1.World);
+            BoundingBox cube2Sphere = TransformBoundingBox((BoundingSphere)cube2.Model.Tag, cube2.World);
+
+            if (cube1Sphere.Intersects(cube2Sphere))
+                return true;
+            else
+                return false;
+        }
+
+        private bool checkHookCubeCollision(Cube cube)
         {
             BoundingSphere hookSphere = TransformBoundingSphere((BoundingSphere)theHook.Model.Tag, theHook.World);
-            BoundingSphere cubeSphere = TransformBoundingSphere((BoundingSphere)cube.Model.Tag, cube.World);
+            BoundingBox cubeSphere = TransformBoundingBox((BoundingSphere)cube.Model.Tag, cube.World);
 
             if (hookSphere.Intersects(cubeSphere))
                 return true;
@@ -266,6 +296,27 @@ namespace Cubes
             BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);
 
             return transformedBoundingSphere;
+        }
+
+        private static BoundingBox TransformBoundingBox(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
+        {
+            Vector3 trans;
+            Vector3 scaling;
+            Quaternion rot;
+            transformationMatrix.Decompose(out scaling, out rot, out trans);
+
+            float maxScale = scaling.X;
+            if (maxScale < scaling.Y)
+                maxScale = scaling.Y;
+            if (maxScale < scaling.Z)
+                maxScale = scaling.Z;
+
+            float transformedSphereRadius = originalBoundingSphere.Radius * maxScale;
+            Vector3 transformedSphereCenter = Vector3.Transform(originalBoundingSphere.Center, transformationMatrix);
+
+            BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);
+
+            return BoundingBox.CreateFromSphere(transformedBoundingSphere);
         }
     }
 }

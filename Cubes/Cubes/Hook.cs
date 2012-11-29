@@ -34,6 +34,15 @@ namespace Cubes
         }
 
         private Boolean active = false;
+        private Boolean hasBlock = false;
+
+        public Boolean HasBlock
+        {
+            get { return hasBlock; }
+            set { hasBlock = value; }
+        }
+
+
 
         public Boolean Active
         {
@@ -81,7 +90,7 @@ namespace Cubes
 
         //private double altitude;
         private bool isHooked;
-
+        private KeyboardState oldState;
         //private Matrix world, view, projection;
 
         public Hook(Game game)
@@ -109,6 +118,7 @@ namespace Cubes
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+           
             if (input.KeyboardState.IsKeyDown(Keys.W))
             {
                 position.X -= 1.0f;
@@ -126,9 +136,11 @@ namespace Cubes
                 position.Y += 1.0f;
             }
 
-            if (input.KeyboardState.IsKeyDown(Keys.X))
+            if (input.KeyboardState.IsKeyDown(Keys.X) && input.KeyboardState != oldState)
             {
                 active = !active;
+                if (hasBlock)
+                    hasBlock = !hasBlock;
             }
 
             if (position.Y > 75.0f)
@@ -140,6 +152,7 @@ namespace Cubes
             if (position.X < 10.0f)
                 position.X = 10.0f;
 
+            oldState = input.KeyboardState;
             base.Update(gameTime);
         }
 

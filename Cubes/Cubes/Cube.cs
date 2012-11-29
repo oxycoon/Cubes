@@ -19,6 +19,13 @@ namespace Cubes
     {
         private Matrix world, view, projection;
         private Boolean hooked = false;
+        private Boolean move = true;
+
+        public Boolean Move
+        {
+            get { return move; }
+            set { move = value; }
+        }
         private float fallSpeed = 0;
         private IInputHandler input;
         public Boolean Hooked
@@ -122,14 +129,18 @@ namespace Cubes
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            if (!hooked && position.Y > 0)
+            if (move)
             {
-                position.Y -= (fallSpeed += 0.1f);
-            }
-            if (!hooked && position.Y < 0)
-            {
-                position.Y = 0;
-                fallSpeed = 0;
+                if (!hooked && position.Y > 0)
+                {
+                    position.Y -= (fallSpeed += 0.1f);
+                }
+                if (!hooked && position.Y < 0)
+                {
+                    position.Y = 0;
+                    fallSpeed = 0;
+                    move = false;
+                }
             }
 
             base.Update(gameTime);
@@ -174,7 +185,7 @@ namespace Cubes
             if (maxScale < scaling.Z)
                 maxScale = scaling.Z;
 
-            float transformedSphereRadius = originalBoundingSphere.Radius * maxScale;
+            float transformedSphereRadius = (originalBoundingSphere.Radius * maxScale) * 0.45f;
             Vector3 transformedSphereCenter = Vector3.Transform(originalBoundingSphere.Center, transformationMatrix);
 
             BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);
