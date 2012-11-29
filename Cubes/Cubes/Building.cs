@@ -14,6 +14,9 @@ namespace Cubes
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
+    /// 
+    /// Denne klassen er basert på Reimers:
+    /// http://www.riemers.net/eng/Tutorials/XNA/Csharp/Series2/Creating_the_3D_city.php
     /// </summary>
     public class Building : Microsoft.Xna.Framework.GameComponent
     {
