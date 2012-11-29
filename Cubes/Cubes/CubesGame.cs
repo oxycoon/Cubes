@@ -39,7 +39,7 @@ namespace Cubes
         Effect effect;
 
         private bool isFullScreen = false;
-
+        //private bool activatedMagnet = false;
 
         public CubesGame()
         {
@@ -169,6 +169,11 @@ namespace Cubes
 
             // TODO: Add your update logic here
 
+            if (Hook.Active && !theCube.Hooked)
+            {
+                theCube.Hooked = checkCollision(theCube);
+            }
+
             base.Update(gameTime);
         }
 
@@ -191,28 +196,6 @@ namespace Cubes
 
             theTerrain.Draw(gameTime, effect, device);
             theSky.Draw(view, projection);
-            
-
-            
-
-            BoundingSphere s1 = (BoundingSphere)theHook.Model.Tag;
-            BoundingSphere s2 = (BoundingSphere)theCube.Model.Tag;
-            
-            BoundingSphere ss1 = TransformBoundingSphere(s1, theHook.World);
-            BoundingSphere ss2 = TransformBoundingSphere(s2, theCube.World);
-
-            if (Hook.Active)
-            {
-                if (ss1.Intersects(ss2))
-                {
-
-                    theCube.Hooked = true;
-                }
-                else
-                {
-                    theCube.Hooked = false;
-                }
-            }
 
             device.BlendState = BlendState.AlphaBlend;
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
@@ -228,6 +211,17 @@ namespace Cubes
             //spriteBatch.End();
             #endregion
             base.Draw(gameTime);
+        }
+
+        private bool checkCollision(Cube cube)
+        {
+            BoundingSphere hookSphere = TransformBoundingSphere((BoundingSphere)theHook.Model.Tag, theHook.World);
+            BoundingSphere cubeSphere = TransformBoundingSphere((BoundingSphere)cube.Model.Tag, theCube.World);
+
+            if (hookSphere.Intersects(cubeSphere))
+                return true;
+            else
+                return false;
         }
 
         private static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)

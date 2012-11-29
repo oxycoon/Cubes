@@ -113,49 +113,20 @@ namespace Cubes
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-
-            if (hooked)
-            {
-                if (input.KeyboardState.IsKeyDown(Keys.W))
-                {
-                    position.X -= 1.0f;
-                }
-                if (input.KeyboardState.IsKeyDown(Keys.S))
-                {
-                    position.X += 1.0f;
-                }
-                if (input.KeyboardState.IsKeyDown(Keys.R))
-                {
-                    position.Y += 1.0f;
-                }
-                if (input.KeyboardState.IsKeyDown(Keys.F))
-                {
-                    position.Y -= 1.0f;
-                }
-
-                if (position.Y > 75.0f)
-                    position.Y = 75.0f;
-                if (position.Y < 0.0f)
-                    position.Y = 0.0f;
-                if (position.X > 90.0f)
-                    position.X = 90.0f;
-                if (position.X < 10.0f)
-                    position.X = 10.0f;
-            }
-
             base.Update(gameTime);
         }
 
         public void Draw(Matrix world, Camera camera, float craneRotation)
         {
             // ISROT
-            Matrix matWorld, matCubeTrans, matCubeOrbit;
+            Matrix matWorld, matCubeTrans, matCubeOrbit, matScale;
             
             if (hooked)
             {
-                matCubeTrans = Matrix.CreateTranslation(position.X, position.Y, position.X);
+                matScale = Matrix.CreateScale(10.0f);
+                matCubeTrans = Matrix.CreateTranslation(new Vector3 (0.0f, 5.0f, 0.0f));
                 //matCubeOrbit = matCubeTrans * Matrix.CreateRotationY(craneRotation);
-                matWorld = world * matCubeTrans;
+                matWorld = world * matScale * matCubeTrans;
             }
             else
             {

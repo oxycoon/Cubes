@@ -154,6 +154,7 @@ namespace Cubes
         {
             Matrix matHookTrans, matHookScale, matHookOrbit, hookWorld, matWireScale, matWireTrans, matWireOrb, wireWorld;
 
+            //ISROT, identity, scale, rotation, orbit, translation
             matHookScale = Matrix.CreateScale(20.0f);
             matHookTrans = Matrix.CreateTranslation(0.0f, 80.0f - position.Y, 100.0f - position.X);
             matHookOrbit = matHookTrans * Matrix.CreateRotationY(craneRotation);
