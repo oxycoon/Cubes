@@ -29,6 +29,7 @@ namespace Cubes
         private InputHandler input;
         private Camera theCamera;
         private SkyDome theSky;
+        private Building theCity;
 
 
         private Matrix world, view, projection;
@@ -69,6 +70,9 @@ namespace Cubes
             theCube = new Cube(this);
             this.Components.Add(theCube);
             theCubeList.Add(theCube);
+
+            theCity = new Building(this);
+            this.Components.Add(theCity);
         }
 
         /// <summary>
@@ -138,6 +142,10 @@ namespace Cubes
             theCrane.Effect = effect;
             theSky.Device = device;
             theSky.Effect = effect;
+
+            theCity.Effect = effect;
+            theCity.Device = device;
+            theCity.initElements();
         }
 
         private Model LoadModel(String name)
@@ -233,6 +241,7 @@ namespace Cubes
 
             theTerrain.Draw(gameTime, effect, device);
             theSky.Draw(view, projection);
+            theCity.Draw(world);
 
             device.BlendState = BlendState.AlphaBlend;
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));

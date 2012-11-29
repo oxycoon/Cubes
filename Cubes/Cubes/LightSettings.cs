@@ -19,6 +19,7 @@ namespace Cubes
 
         public static Vector3 DiffuseLight = new Vector3(1.0f, 1.0f, 1.0f);
         public static Vector3 DiffuseMaterial = new Vector3(0.4f, 0.7f, 0.6f);
+
         public static Vector3 LightDirection = new Vector3(1.0f, -1.0f, -1.0f);
     }
 }
