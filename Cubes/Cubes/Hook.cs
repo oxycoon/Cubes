@@ -33,12 +33,12 @@ namespace Cubes
             set { meshMatrix = value; }
         }
 
-        private static Boolean active = false;
+        private Boolean active = false;
 
-        public static Boolean Active
+        public Boolean Active
         {
-            get { return Hook.active; }
-            set { Hook.active = value; }
+            get { return active; }
+            set { active = value; }
         }
         private Model model;
         private Model theWireModel;

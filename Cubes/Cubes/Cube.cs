@@ -19,6 +19,7 @@ namespace Cubes
     {
         private Matrix world, view, projection;
         private Boolean hooked = false;
+        private float fallSpeed = 0;
         private IInputHandler input;
         public Boolean Hooked
         {
@@ -39,7 +40,7 @@ namespace Cubes
             set { meshMatrix = value; }
         }
 
-        private Vector3 position = new Vector3(50.0f, 0.0f, 0.0f);
+        private Vector3 position;
         private Vector3 scale;
 
         private Model model;
@@ -95,6 +96,14 @@ namespace Cubes
             input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
         }
 
+        public Cube(Game game, Vector3 position)
+            : base(game)
+        {
+            // TODO: Construct any child components here
+            input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
+            this.position = position;
+        }
+
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
         /// to run.  This is where it can query for any required services and load content.
@@ -113,6 +122,16 @@ namespace Cubes
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+            if (!hooked && position.Y > 0)
+            {
+                position.Y -= (fallSpeed += 0.1f);
+            }
+            if (!hooked && position.Y < 0)
+            {
+                position.Y = 0;
+                fallSpeed = 0;
+            }
+
             base.Update(gameTime);
         }
 
@@ -121,17 +140,21 @@ namespace Cubes
             // ISROT
             Matrix matWorld, matCubeTrans, matCubeOrbit, matScale;
             
+            matWorld = Matrix.Identity;
             if (hooked)
             {
                 matScale = Matrix.CreateScale(5.0f);
-                matCubeTrans = Matrix.CreateTranslation(new Vector3 (0.0f, -50.0f, 0.0f));
-                //matCubeOrbit = matCubeTrans * Matrix.CreateRotationY(craneRotation);
+                matCubeTrans = Matrix.CreateTranslation(new Vector3(0.0f, -50.0f, 0.0f));
+                //matCubeOrbit = matCubeTrans * Matrix.CreateRotationY(craneRotation);             
                 matWorld = matScale * matCubeTrans * world;
+                
             }
             else
             {
-                matWorld = Matrix.Identity * Matrix.CreateTranslation(position);
+                    matWorld =  Matrix.CreateTranslation(position);
             }
+            if (!position.Equals(matWorld.Translation))
+                position = matWorld.Translation;
 
             this.world = matWorld;
 

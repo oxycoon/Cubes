@@ -25,7 +25,7 @@ namespace Cubes
         private Hook theHook;
         private Cube theCube;
         private Terrain theTerrain;
-        private List<Cube> theCubeList;
+        private List<Cube> theCubeList = new List<Cube>();
         private InputHandler input;
         private Camera theCamera;
         private SkyDome theSky;
@@ -66,6 +66,7 @@ namespace Cubes
 
             theCube = new Cube(this);
             this.Components.Add(theCube);
+            theCubeList.Add(theCube);
         }
 
         /// <summary>
@@ -169,9 +170,26 @@ namespace Cubes
 
             // TODO: Add your update logic here
 
-            if (Hook.Active && !theCube.Hooked)
+            if (input.KeyboardState.IsKeyDown(Keys.T))
             {
-                theCube.Hooked = checkCollision(theCube);
+                Random rnd = new Random();
+                Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
+                tmp.Model = Content.Load<Model>("Models\\testCube2");
+                this.Components.Add(tmp);
+                theCubeList.Add(tmp);
+       
+            }
+
+            foreach (Cube c in theCubeList)
+            {
+                if (theHook.Active && !c.Hooked)
+                {
+                    c.Hooked = checkCollision(c);
+                }
+                else if (!theHook.Active)
+                {
+                    c.Hooked = false;
+                }
             }
 
             base.Update(gameTime);
@@ -200,7 +218,12 @@ namespace Cubes
             device.BlendState = BlendState.AlphaBlend;
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
             matrixStack.Push(theHook.Draw(gameTime, theCamera, matrixStack.Peek(), theCrane.Rotation));
-            theCube.Draw(matrixStack.Peek(), theCamera, theCrane.Rotation);
+
+            foreach (Cube c in theCubeList)
+            {
+                c.Draw(matrixStack.Peek(), theCamera, theCrane.Rotation);
+            }
+
 
             matrixStack.Pop();
             matrixStack.Pop();
@@ -216,7 +239,7 @@ namespace Cubes
         private bool checkCollision(Cube cube)
         {
             BoundingSphere hookSphere = TransformBoundingSphere((BoundingSphere)theHook.Model.Tag, theHook.World);
-            BoundingSphere cubeSphere = TransformBoundingSphere((BoundingSphere)cube.Model.Tag, theCube.World);
+            BoundingSphere cubeSphere = TransformBoundingSphere((BoundingSphere)cube.Model.Tag, cube.World);
 
             if (hookSphere.Intersects(cubeSphere))
                 return true;
