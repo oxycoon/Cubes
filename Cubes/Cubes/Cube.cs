@@ -123,10 +123,10 @@ namespace Cubes
             
             if (hooked)
             {
-                matScale = Matrix.CreateScale(10.0f);
-                matCubeTrans = Matrix.CreateTranslation(new Vector3 (0.0f, 5.0f, 0.0f));
+                matScale = Matrix.CreateScale(5.0f);
+                matCubeTrans = Matrix.CreateTranslation(new Vector3 (0.0f, -50.0f, 0.0f));
                 //matCubeOrbit = matCubeTrans * Matrix.CreateRotationY(craneRotation);
-                matWorld = world * matScale * matCubeTrans;
+                matWorld = matScale * matCubeTrans * world;
             }
             else
             {
