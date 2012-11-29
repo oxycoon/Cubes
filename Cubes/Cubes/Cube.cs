@@ -21,11 +21,23 @@ namespace Cubes
         private Boolean hooked = false;
         private Boolean move = true;
 
+        private Vector3 position;
+        private Vector3 scale;
+
+        private Model model;
+        private Texture texture;
+        private IInputHandler input;
+
+        private Matrix[] meshMatrix;
+        private Vector3 cubePosition;
+
+        #region Get/Sets
         public Boolean Move
         {
             get { return move; }
             set { move = value; }
         }
+
         private float fallSpeed = 0;
 
         public float FallSpeed
@@ -33,7 +45,7 @@ namespace Cubes
             get { return fallSpeed; }
             set { fallSpeed = value; }
         }
-        private IInputHandler input;
+
         public Boolean Hooked
         {
             get { return hooked; }
@@ -45,19 +57,12 @@ namespace Cubes
             get { return world; }
             set { world = value; }
         }
-        private Matrix[] meshMatrix;
 
         public Matrix[] MeshMatrix
         {
             get { return meshMatrix; }
             set { meshMatrix = value; }
         }
-
-        private Vector3 position;
-        private Vector3 scale;
-
-        private Model model;
-        private Texture texture;
 
         public Texture Texture
         {
@@ -86,7 +91,6 @@ namespace Cubes
             }
         }
 
-
         public Vector3 Scale
         {
             get { return scale; }
@@ -99,8 +103,7 @@ namespace Cubes
             set { position = value; }
         }
 
-        private Vector3 cubePosition;
-        
+        #endregion
 
         public Cube(Game game)
             : base(game)

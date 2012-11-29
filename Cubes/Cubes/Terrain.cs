@@ -19,6 +19,15 @@ namespace Cubes
         public Color Color;
         public Vector3 Normal;
 
+        public VertexPositionColorNormal(Vector3 position, Vector3 normal, Color color)
+        {
+            Position = position;
+            Color = color;
+            Normal = normal;
+        }
+
+        //public static int SizeInBytes { get; }
+
         public readonly static VertexDeclaration VertexDeclaration = new VertexDeclaration
         (
             new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
@@ -42,8 +51,6 @@ namespace Cubes
         private VertexPositionNormalTexture[] vertices;
 
         private int[] indices;
-
-        private Vector3 ambientLight, ambientMaterial, diffuseLight, diffuseMaterial, lightDirection;
 
         private Texture2D terrTex;
 
@@ -76,7 +83,6 @@ namespace Cubes
         {
             // TODO: Add your initialization code here
             GenerateTerrain();
-            SetupLighting();
             base.Initialize();
         }
 
@@ -202,15 +208,6 @@ namespace Cubes
                 vertices[i].Normal.Normalize();
         }
 
-        private void SetupLighting()
-        {
-            ambientLight = new Vector3(1.0f, 1.0f, 1.0f);
-            ambientMaterial = new Vector3(0.7f, 0.7f, 0.7f);
-            diffuseLight = new Vector3(1.0f, 1.0f, 1.0f);
-            diffuseMaterial = new Vector3(0.4f, 0.7f, 0.6f);
-            lightDirection = new Vector3(1.0f, -1.0f, -1.0f);
-        }
-
         #endregion
 
         public void Draw(GameTime gametime, Effect effect, GraphicsDevice device)
@@ -223,11 +220,11 @@ namespace Cubes
             Matrix world = Matrix.CreateTranslation(-(width * SIZEMULTIPLYER) / 2.0f, 0, -(length*SIZEMULTIPLYER) / 2.0f);
             effect.Parameters["xWorld"].SetValue(world);
             effect.Parameters["xEnableLightingTexture"].SetValue(true);
-            effect.Parameters["xDiffuseLight"].SetValue(diffuseLight);
-            effect.Parameters["xDiffuseMaterial"].SetValue(diffuseMaterial);
-            effect.Parameters["xAmbientLight"].SetValue(ambientLight);
-            effect.Parameters["xAmbientMaterial"].SetValue(ambientMaterial);
-            effect.Parameters["xLightDirection"].SetValue(lightDirection);
+            effect.Parameters["xDiffuseLight"].SetValue(LightSettings.DiffuseLight);
+            effect.Parameters["xDiffuseMaterial"].SetValue(LightSettings.DiffuseMaterial);
+            effect.Parameters["xAmbientLight"].SetValue(LightSettings.AmbientLight);
+            effect.Parameters["xAmbientMaterial"].SetValue(LightSettings.AmbientMaterial);
+            effect.Parameters["xLightDirection"].SetValue(LightSettings.LightDirection);
             effect.Parameters["xTexture"].SetValue(terrTex);
 
             effect.CurrentTechnique = effect.Techniques["PhongTexturedShader"];
