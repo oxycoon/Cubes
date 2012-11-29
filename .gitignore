@@ -4,3 +4,6 @@ Cubes/Cubes/Cubes.csproj.Debug.cachefile
 Cubes/Cubes/obj/x86/Debug/*
 Cubes/CubesContent/obj/x86/Debug/*
 Cubes/Cubes/Cubes.csproj.user
+
+Cubes/Cubes/CubesGame.cs.orig
+Cubes/Cubes/Terrain.cs.orig

@@ -28,6 +28,7 @@ namespace Cubes
         private InputHandler input;
         private Camera theCamera;
         private SkyDome theSky;
+        private Building theCity;
 
         private Texture2D boxIcon;
         private Texture2D magnetIcon;
@@ -72,6 +73,9 @@ namespace Cubes
 
             theSky = new SkyDome(this);
             this.Components.Add(theSky);
+
+            theCity = new Building(this);
+            this.Components.Add(theCity);
 
         }
 
@@ -142,6 +146,10 @@ namespace Cubes
             theCrane.Effect = effect;
             theSky.Device = device;
             theSky.Effect = effect;
+
+            theCity.Effect = effect;
+            theCity.Device = device;
+            theCity.initElements();
 
             hudFont = Content.Load<SpriteFont>("font");
             hudDrawer = new SpriteBatch( graphics.GraphicsDevice );
@@ -272,6 +280,7 @@ namespace Cubes
             effect.Parameters["xView"].SetValue(view);
 
             theTerrain.Draw(gameTime, effect, device);
+            theCity.Draw();
             theSky.Draw(view, projection);
 
             device.BlendState = BlendState.AlphaBlend;

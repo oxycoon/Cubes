@@ -192,7 +192,7 @@ namespace Cubes
             base.Update(gameTime);
         }
 
-        public void Draw(Matrix _world)
+        public void Draw()
         {
             RasterizerState rs = new RasterizerState();
             rs.CullMode = CullMode.None;
