@@ -195,7 +195,7 @@ namespace Cubes
 
             #region SpriteBatch
             //spriteBatch.Begin();
-            //spriteBatch.DrawString(spriteFont, theCamera.CamZoom.ToString(), new Vector2(10.0f, 10.0f), Color.Black);
+            //spriteBatch.DrawString(spriteFont, theCamera.CamZoom.ToString(), new Vector2(20.0f, 20.0f), Color.Black);
             //spriteBatch.End();
             #endregion
             base.Draw(gameTime);
