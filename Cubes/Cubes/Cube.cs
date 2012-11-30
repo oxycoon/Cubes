@@ -18,7 +18,7 @@ namespace Cubes
     public class Cube : Microsoft.Xna.Framework.GameComponent
     {
         #region Variabler
-        private Matrix world, view, projection;
+        private Matrix world;
         private Boolean hooked = false;
         private Boolean move = true;
 
@@ -33,7 +33,6 @@ namespace Cubes
 
 
         private Matrix[] meshMatrix;
-        private Vector3 cubePosition;
         #endregion
 
         #region Get/Sets

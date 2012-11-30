@@ -46,12 +46,20 @@ namespace Cubes
         private SpriteFont hudFont;
         private DepthStencilState dsState;
    
-
-        //BasicEffect effect;
         Effect effect;
 
         private bool isFullScreen = false;
-        //private bool activatedMagnet = false;
+        private bool showHelp = false;
+
+        #region HelpString
+        private String helpString = "Use mouse to rotate camera. Mouse wheel to zoom camera.\n" +
+                                    "Turn crane using A/D or Left/Right Arrow.\n" +
+                                    "Move magnet on crane using W/S.\n" +
+                                    "Move magnet up and down using R/F.\n" +
+                                    "Turn on/off magnet using X. Lock/unlock camera using C. Spawn crates using T.\n"+
+                                    "Press H to close this information.";
+        #endregion
+
         #endregion
 
         public CubesGame()
@@ -231,6 +239,10 @@ namespace Cubes
                 theCubeList.Add(tmp);
 
             }
+            if (input.KeyboardState.IsKeyDown(Keys.H) && input.KeyboardState != oldState)
+            {
+                showHelp = !showHelp;
+            }
 
             #region Kubenes kollisjonsdeteksjonalgoritme
             foreach (Cube c1 in theCubeList)
@@ -360,6 +372,16 @@ namespace Cubes
             {
                 hudDrawer.Draw(camLock, new Rectangle((device.Viewport.Width / 2), device.Viewport.Height - 50, 32, 32), new Rectangle(0, 32, 32, 32), Color.White);
             }
+
+            if (showHelp)
+            {
+                hudDrawer.DrawString(hudFont, helpString, new Vector2((device.Viewport.Width / 2) -250.0f, (device.Viewport.Height / 2) - 100.0f), Color.White);
+            }
+            else
+            {
+                hudDrawer.DrawString(hudFont, "Press H for help.", new Vector2(20.0f, 35.0f), Color.White);
+            }
+
             hudDrawer.End();
 
             dsState = new DepthStencilState();
