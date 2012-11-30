@@ -236,8 +236,8 @@ namespace Cubes
             if (input.KeyboardState.IsKeyDown(Keys.T) && input.KeyboardState != oldState)
             {
                 Random rnd = new Random();
-                Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)), effect);
-                //Cube tmp = new Cube(this, new Vector3(50, 300, 0), effect);
+                //Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)), effect);
+                Cube tmp = new Cube(this, new Vector3(50, 50, 0), effect);
                 tmp.TextureSide = Content.Load<Texture2D>("Textures\\Cube-side");
                 tmp.TextureTop = Content.Load<Texture2D>("Textures\\Cube-topbottom");
                 tmp.Model = LoadModel("Models\\Cube2");

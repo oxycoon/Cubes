@@ -271,7 +271,7 @@ namespace Cubes
             if (maxScale < scaling.Z)
                 maxScale = scaling.Z;
 
-            float transformedSphereRadius = (originalBoundingSphere.Radius * maxScale) * 0.44f;
+            float transformedSphereRadius = (originalBoundingSphere.Radius * maxScale) * 0.015f;
             Vector3 transformedSphereCenter = Vector3.Transform(originalBoundingSphere.Center, transformationMatrix);
 
             BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);
