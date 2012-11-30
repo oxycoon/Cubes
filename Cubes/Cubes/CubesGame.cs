@@ -62,7 +62,6 @@ namespace Cubes
                                     "Clear boxes using Y \n" +
                                     "Press H to close this information.";
         #endregion
-
         #endregion
 
         public CubesGame()
