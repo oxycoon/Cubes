@@ -201,7 +201,7 @@ namespace Cubes
         }
 
         /// <summary>
-        /// Finner den transformerte BoundingSpheren til kroken
+        /// Finner den transformerte BoundingSpheren
         /// </summary>
         /// <param name="originalBoundingSphere">Den opprinnelige BoundingSphera til objektet</param>
         /// <param name="transformationMatrix">Transformasjonsmatrisa til objektet</param>

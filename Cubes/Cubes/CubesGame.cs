@@ -298,7 +298,7 @@ namespace Cubes
 
             foreach (Cube c in theCubeList)
             {
-                c.Draw(matrixStack.Peek(), theCamera, theCrane.Rotation);
+                c.Draw(matrixStack.Peek(), theCamera);
             }
 
 
