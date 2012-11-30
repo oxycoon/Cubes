@@ -180,8 +180,8 @@ namespace Cubes
                     position.Y = 0;
                     fallSpeed = 0;
                     CubesGame.theSmokeEffect.addExplotion(new Vector3(world.Translation.X, world.Translation.Y, world.Translation.Z));
-                    CubesGame.theSmokeEffect.addExplotion(new Vector3(world.Translation.X, world.Translation.Y, world.Translation.Z));
-                    CubesGame.theSmokeEffect.addExplotion(new Vector3(world.Translation.X, world.Translation.Y, world.Translation.Z));
+                    //CubesGame.theSmokeEffect.addExplotion(new Vector3(world.Translation.X, world.Translation.Y, world.Translation.Z));
+                    //CubesGame.theSmokeEffect.addExplotion(new Vector3(world.Translation.X, world.Translation.Y, world.Translation.Z));
                     move = false;
                 }
             }

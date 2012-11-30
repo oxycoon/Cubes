@@ -56,7 +56,10 @@ namespace Cubes
                                     "Turn crane using A/D or Left/Right Arrow.\n" +
                                     "Move magnet on crane using W/S.\n" +
                                     "Move magnet up and down using R/F.\n" +
-                                    "Turn on/off magnet using X. Lock/unlock camera using C. Spawn crates using T.\n"+
+                                    "Turn on/off magnet using X \n"+
+                                    "Lock/unlock camera using C \n" +
+                                    "Spawn crates using T \n" +
+                                    "Clear boxes using Y \n" +
                                     "Press H to close this information.";
         #endregion
 
@@ -228,6 +231,8 @@ namespace Cubes
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+
+            #region Keyboar logic
             //Oppretter kuber i et tilfeldig sted
             if (input.KeyboardState.IsKeyDown(Keys.T) && input.KeyboardState != oldState)
             {
@@ -244,6 +249,12 @@ namespace Cubes
             if (input.KeyboardState.IsKeyDown(Keys.H) && input.KeyboardState != oldState)
             {
                 showHelp = !showHelp;
+            }
+            #endregion
+
+            if (input.KeyboardState.IsKeyDown(Keys.Y) && input.KeyboardState != oldState)
+            {
+                theCubeList.Clear();
             }
             #endregion
 
