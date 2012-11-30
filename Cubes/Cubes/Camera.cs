@@ -23,10 +23,10 @@ namespace Cubes
 
         private Matrix view, projection;
 
-        //private Vector3 camPos = new Vector3(2.0f, 20.0f, 4.0f);
-        //private Vector3 camTar = new Vector3(0.0f, 0.0f, 0.0f);
-        private Vector3 camPos = new Vector3(400.0f, 50.0f, 0.0f);
-        private Vector3 camTar = new Vector3(0.0f, 50.0f, 0.0f);
+        private Vector3 camPos = new Vector3(2.0f, -20.0f, 4.0f);
+        private Vector3 camTar = new Vector3(0.0f, 0.0f, 0.0f);
+        //private Vector3 camPos = new Vector3(400.0f, 50.0f, 0.0f);
+        //private Vector3 camTar = new Vector3(0.0f, 50.0f, 0.0f);
         private Vector3 camUp = Vector3.Up;
         private Vector3 camRef = new Vector3(0.0f, 0.0f, -1.0f);
         
