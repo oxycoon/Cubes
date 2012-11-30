@@ -65,7 +65,7 @@ namespace Cubes
         /// <summary>
         /// Get/Set for modellen til kroken
         /// 
-        /// Set-metoden vil også opprette BoundingSphere og legge den i modellens tag.
+        /// Set-metoden vil ogsï¿½ opprette BoundingSphere og legge den i modellens tag.
         /// </summary>
         public Model Model
         {
@@ -122,12 +122,12 @@ namespace Cubes
             // TODO: Add your update code here
 
             #region Keyboard logic
-            //Beveger kroken (og vaieren) bakover på kranen.
+            //Beveger kroken (og vaieren) bakover pï¿½ kranen.
             if (input.KeyboardState.IsKeyDown(Keys.W))
             {
                 position.X += 1.0f;
             }
-            //Beveger kroken (og vaieren) fremover på kranen.
+            //Beveger kroken (og vaieren) fremover pï¿½ kranen.
             if (input.KeyboardState.IsKeyDown(Keys.S))
             {
                 position.X -= 1.0f;
@@ -142,7 +142,7 @@ namespace Cubes
             {
                 position.Y += 1.0f;
             }
-            //Skrur av/på magneten, hvis den har en blokk slipper den blokken
+            //Skrur av/pï¿½ magneten, hvis den har en blokk slipper den blokken
             if (checkKeyState(Keys.X))
             {
                 active = !active;
@@ -160,7 +160,7 @@ namespace Cubes
             //Sjekker om magneten er for langt unna kranen
             if (position.X > 90.0f)
                 position.X = 90.0f;
-            //Sjekker om magneten er for nærme kranen.
+            //Sjekker om magneten er for nï¿½rme kranen.
             if (position.X < 10.0f)
                 position.X = 10.0f;
             #endregion
@@ -228,8 +228,8 @@ namespace Cubes
         }
 
         /// <summary>
-        /// Sørger for at spilleren ikke kan holde inne en knapp for å
-        /// gjøre en handling gjentatte ganger hver gang spillet oppdateres.
+        /// Sï¿½rger for at spilleren ikke kan holde inne en knapp for ï¿½
+        /// gjï¿½re en handling gjentatte ganger hver gang spillet oppdateres.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>

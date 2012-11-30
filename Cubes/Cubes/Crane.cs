@@ -17,6 +17,7 @@ namespace Cubes
     /// </summary>
     public class Crane : Microsoft.Xna.Framework.GameComponent
     {
+        #region Variables
         private Model theCraneModel;
         private Texture2D theCraneTexture, theWeightTexture, theWireTexture, theBaseTexture;
         private Effect effect;
@@ -24,6 +25,7 @@ namespace Cubes
         private Camera camera;
 
         private float rotation = 0.0f;
+        #endregion
 
         #region Get/Set methods
         public float Rotation

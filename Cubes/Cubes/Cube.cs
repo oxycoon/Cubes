@@ -17,6 +17,7 @@ namespace Cubes
     /// </summary>
     public class Cube : Microsoft.Xna.Framework.GameComponent
     {
+        #region Veriables
         private Matrix world, view, projection;
         private Boolean hooked = false;
         private Boolean move = true;
@@ -30,7 +31,7 @@ namespace Cubes
 
         private Matrix[] meshMatrix;
         private Vector3 cubePosition;
-
+        #endregion
 
         #region Get/Sets
         public Boolean Move
@@ -229,7 +230,7 @@ namespace Cubes
 
             BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);
 
-            return transformedBoundingSphere;
+            return transformedBoundingSphere; // Returning the transformed BoundingSphere
         }
 
     }
