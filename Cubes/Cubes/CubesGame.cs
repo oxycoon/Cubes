@@ -164,7 +164,7 @@ namespace Cubes
 
             // Smoky
             theSmokeEffect.graphicsDevice = graphics.GraphicsDevice;
-            //theSmokeEffect.explosionEffect = effect;
+            theSmokeEffect.explosionEffect = Content.Load<Effect>("Particle"); ;
             theSmokeEffect.explosionTexture = Content.Load<Texture2D>("Textures\\MC_Dirt");
         }
 
@@ -290,7 +290,7 @@ namespace Cubes
             theTerrain.Draw(gameTime, effect, device);
             theCity.Draw();
             theSky.Draw(view, projection);
-            theSmokeEffect.Draw(effect, theCamera, device);
+            theSmokeEffect.Draw(theCamera, device);
 
             device.BlendState = BlendState.AlphaBlend;
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));

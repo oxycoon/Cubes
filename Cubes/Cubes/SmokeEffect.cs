@@ -23,7 +23,7 @@ namespace Cubes
             new ParticleExplosionSettings();
         ParticleSettings particleSettings = new ParticleSettings();
 
-        //public Effect explosionEffect { get; set; }
+        public Effect explosionEffect { get; set; }
         public Texture2D explosionTexture { get; set; }
         public GraphicsDevice graphicsDevice { get; set; }
 
@@ -33,13 +33,6 @@ namespace Cubes
             rnd = new Random();
         }
 
-
-        //protected override void LoadContent()
-        //{
-        //    // Load explosion stuff
-        //    explosionEffect.CurrentTechnique = explosionEffect.Techniques["Technique1"];
-        //    explosionEffect.Parameters["theTexture"].SetValue(explosionTexture);
-        //}
 
         /// <summary>
         /// Allows the game component to update itself.
@@ -56,7 +49,7 @@ namespace Cubes
         {
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.B)) //Bang!! 
-                this.addExplotion();
+                this.addExplotion(new Vector3(0.0f, 0.0f, 0.0f));
             // Loop through and update explosions 
             for (int i = 0; i < explosions.Count; ++i)
             {
@@ -70,10 +63,10 @@ namespace Cubes
             }
         }
 
-        private void addExplotion()
+        public void addExplotion(Vector3 position)
         {
             explosions.Add(new ParticleExplosion(graphicsDevice,
-               new Vector3(0.0f, 0.0f, 0.0f),
+               position,
                       (rnd.Next(
                    particleExplosionSettings.minLife,
                    particleExplosionSettings.maxLife)),
@@ -91,21 +84,14 @@ namespace Cubes
                particleSettings));
         }
 
-        public void Draw(Effect effect, Camera camera, GraphicsDevice device)
+        public void Draw(Camera camera, GraphicsDevice device)
         {
-            effect.Parameters["xWorld"].SetValue(Matrix.Identity);
-            effect.Parameters["xEnableLightingTexture"].SetValue(true);
-            effect.Parameters["xDiffuseLight"].SetValue(LightSettings.DiffuseLight);
-            effect.Parameters["xDiffuseMaterial"].SetValue(LightSettings.DiffuseMaterial);
-            effect.Parameters["xAmbientLight"].SetValue(LightSettings.AmbientLight);
-            effect.Parameters["xAmbientMaterial"].SetValue(LightSettings.AmbientMaterial);
-            effect.Parameters["xLightDirection"].SetValue(LightSettings.LightDirection);
-            effect.Parameters["xTexture"].SetValue(explosionTexture);
+            explosionEffect.CurrentTechnique = explosionEffect.Techniques["Technique1"];
+            explosionEffect.Parameters["theTexture"].SetValue(explosionTexture);
 
-            effect.CurrentTechnique = effect.Techniques["PhongTexturedShader"];
             foreach (ParticleExplosion explosion in explosions)
             {
-                explosion.Draw(effect, camera, device);
+                explosion.Draw(explosionEffect, camera, device);
             }
         }
     }

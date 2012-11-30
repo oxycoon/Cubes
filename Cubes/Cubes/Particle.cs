@@ -245,7 +245,7 @@ namespace Cubes
             if (endOfLiveParticlesIndex - endOfDeadParticlesIndex > 0)
             {
                 // Set HLSL parameters
-                //effect.Parameters["WorldViewProjection"].SetValue(camera.View * camera.Projection);
+                effect.Parameters["WorldViewProjection"].SetValue(camera.View * camera.Projection);
                 // Draw particles
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
