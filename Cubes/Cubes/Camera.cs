@@ -100,7 +100,6 @@ namespace Cubes
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
             this.InitializeCam();
             camRef = ((-1.0f) * camPos);
 
@@ -260,9 +259,7 @@ namespace Cubes
         /// <returns></returns>
         private bool checkKeyState(Keys key)
         {
-            if (input.KeyboardState.IsKeyUp(key) && oldState.IsKeyDown(key))
-                return true;
-            return false;
+            return (input.KeyboardState.IsKeyUp(key) && oldState.IsKeyDown(key));
         }
     }
 }

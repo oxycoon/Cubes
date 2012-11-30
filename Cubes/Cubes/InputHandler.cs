@@ -63,7 +63,6 @@ namespace Cubes
             {
                 Game.Exit();
             }
-
             base.Update(gameTime);
         }
     }

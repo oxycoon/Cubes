@@ -18,14 +18,25 @@ namespace Cubes
     public class Hook : Microsoft.Xna.Framework.GameComponent
     {
         private Matrix world;
+        private Matrix[] meshMatrix;
 
+        private Boolean active = false;
+        private Boolean hasBlock = false;
+
+        private Model model;
+        private Model theWireModel;
+        
+        private Vector3 position;
+
+        private KeyboardState oldState;
+        private IInputHandler input;
+
+        #region Get/Set
         public Matrix World
         {
             get { return world; }
             set { world = value; }
         }
-
-        private Matrix[] meshMatrix;
 
         public Matrix[] MeshMatrix
         {
@@ -33,8 +44,11 @@ namespace Cubes
             set { meshMatrix = value; }
         }
 
-        private Boolean active = false;
-        private Boolean hasBlock = false;
+        public Boolean Active
+        {
+            get { return active; }
+            set { active = value; }
+        }
 
         public Boolean HasBlock
         {
@@ -42,25 +56,17 @@ namespace Cubes
             set { hasBlock = value; }
         }
 
-
-
-        public Boolean Active
-        {
-            get { return active; }
-            set { active = value; }
-        }
-        private Model model;
-        private Model theWireModel;
-        private IInputHandler input;
-
-        private Vector3 position;
-
         public Vector3 Position
         {
             get { return position; }
             set { position = value; }
         }
 
+        /// <summary>
+        /// Get/Set for modellen til kroken
+        /// 
+        /// Set-metoden vil også opprette BoundingSphere og legge den i modellens tag.
+        /// </summary>
         public Model Model
         {
             get { return model; }
@@ -87,11 +93,7 @@ namespace Cubes
             get { return theWireModel; }
             set { theWireModel = value; }
         }
-
-        //private double altitude;
-        private bool isHooked;
-        private KeyboardState oldState;
-        //private Matrix world, view, projection;
+        #endregion
 
         public Hook(Game game)
             : base(game)
@@ -118,46 +120,57 @@ namespace Cubes
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-           
+
+            #region Keyboard logic
+            //Beveger kroken (og vaieren) bakover på kranen.
             if (input.KeyboardState.IsKeyDown(Keys.W))
-            {
-                position.X -= 1.0f;
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.S))
             {
                 position.X += 1.0f;
             }
+            //Beveger kroken (og vaieren) fremover på kranen.
+            if (input.KeyboardState.IsKeyDown(Keys.S))
+            {
+                position.X -= 1.0f;
+            }
+            //Beveger kroken (og vaieren) ned.
             if (input.KeyboardState.IsKeyDown(Keys.R))
             {
                 position.Y -= 1.0f;
             }
+            //Beveger kroken (og vaieren) opp.
             if (input.KeyboardState.IsKeyDown(Keys.F))
             {
                 position.Y += 1.0f;
             }
-
-            if (input.KeyboardState.IsKeyDown(Keys.X) && input.KeyboardState != oldState)
+            //Skrur av/på magneten, hvis den har en blokk slipper den blokken
+            if (checkKeyState(Keys.X))
             {
                 active = !active;
                 if (hasBlock)
                     hasBlock = !hasBlock;
             }
-
+            #endregion
+            #region Restriction logic
+            //Sjekker om magneten er for langt nede
             if (position.Y > 75.0f)
                 position.Y = 75.0f;
+            //Sjekker om magneten er for langt oppe
             if (position.Y < 0.0f)
                 position.Y = 0.0f;
+            //Sjekker om magneten er for langt unna kranen
             if (position.X > 90.0f)
                 position.X = 90.0f;
+            //Sjekker om magneten er for nærme kranen.
             if (position.X < 10.0f)
                 position.X = 10.0f;
+            #endregion
 
             oldState = input.KeyboardState;
             base.Update(gameTime);
         }
 
         /// <summary>
-        /// Draws the crane.
+        /// Tegner kroken og vaieren.
         /// </summary>
         /// <param name="gametime">Provides a snapshot of timing values</param>
         /// <param name="camera">Camera to draw object in correct areas</param>
@@ -167,16 +180,18 @@ namespace Cubes
         {
             Matrix matHookTrans, matHookScale, matHookOrbit, hookWorld, matWireScale, matWireTrans, matWireOrb, wireWorld;
 
-            //ISROT, identity, scale, rotation, orbit, translation
+            //Transformerer Kroken
             matHookScale = Matrix.CreateScale(20.0f);
-            matHookTrans = Matrix.CreateTranslation(0.0f, 80.0f - position.Y, 100.0f - position.X);
+            matHookTrans = Matrix.CreateTranslation(0.0f, 80.0f - position.Y, position.X);
             matHookOrbit = matHookTrans * Matrix.CreateRotationY(craneRotation);
             hookWorld = _world * matHookScale * matHookOrbit;
 
+            //Transformerer vaieren
             matWireScale = Matrix.CreateScale(new Vector3(5.0f, position.Y*2, 5.0f));
-            matWireTrans = Matrix.CreateTranslation(0.0f, 86.0f - position.Y, 100 - position.X);
+            matWireTrans = Matrix.CreateTranslation(0.0f, 86.0f - position.Y, position.X);
             matWireOrb = matWireTrans * Matrix.CreateRotationY(craneRotation);
             wireWorld = _world * matWireScale * matWireOrb;
+
             world = hookWorld;
 
             model.Draw(hookWorld, camera.View, camera.Projection);
@@ -185,6 +200,12 @@ namespace Cubes
             return hookWorld;
         }
 
+        /// <summary>
+        /// Finner den transformerte BoundingSpheren til kroken
+        /// </summary>
+        /// <param name="originalBoundingSphere">Den opprinnelige BoundingSphera til objektet</param>
+        /// <param name="transformationMatrix">Transformasjonsmatrisa til objektet</param>
+        /// <returns></returns>
         public static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {
             Vector3 trans;
@@ -204,6 +225,17 @@ namespace Cubes
             BoundingSphere transformedBoundingSphere = new BoundingSphere(transformedSphereCenter, transformedSphereRadius);
 
             return transformedBoundingSphere;
+        }
+
+        /// <summary>
+        /// Sørger for at spilleren ikke kan holde inne en knapp for å
+        /// gjøre en handling gjentatte ganger hver gang spillet oppdateres.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private bool checkKeyState(Keys key)
+        {
+            return (input.KeyboardState.IsKeyUp(key) && oldState.IsKeyDown(key));
         }
     }
 }
