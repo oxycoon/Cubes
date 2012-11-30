@@ -143,6 +143,7 @@ namespace Cubes
 
             theSky.Model = Content.Load<Model>("Models\\dome");
             theSky.Texture = Content.Load<Texture2D>("Textures\\clouds2");
+            theCity.Texture = Content.Load<Texture2D>("Textures\\texturemap");
 
             theTerrain.Texture = Content.Load<Texture2D>("Textures\\MC_Dirt");
 
@@ -287,7 +288,7 @@ namespace Cubes
             effect.Parameters["xView"].SetValue(view);
 
             theTerrain.Draw(gameTime, effect, device);
-            //theCity.Draw();
+            theCity.Draw();
             theSky.Draw(view, projection);
             theSmokeEffect.Draw(theCamera, device);
 

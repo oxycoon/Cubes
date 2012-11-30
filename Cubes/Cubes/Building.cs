@@ -29,9 +29,17 @@ namespace Cubes
         private int[] heights;
         private Color[] colors;
         private VertexBuffer buildingBuffer;
+
+        private Texture2D texture;
         #endregion
 
         #region Get/sets
+        public Texture2D Texture
+        {
+            get { return texture; }
+            set { texture = value; }
+        }
+
         public Effect Effect
         {
             get { return effect; }
@@ -93,62 +101,67 @@ namespace Cubes
             int cityWidth = indices.GetLength(0);
             int cityLength = indices.GetLength(1);
 
-            List<VertexPositionColorNormal> verticesList = new List<VertexPositionColorNormal>();
+
+            List<VertexPositionNormalTexture> verticesList = new List<VertexPositionNormalTexture>();
             for (int x = 0; x < cityWidth; x++)
             {
                 for (int z = 0; z < cityLength; z++)
                 {
                     int currentbuilding = indices[x, z];
-                    //floor or ceiling
-                    verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z), new Vector3(0, 1, 0), colors[currentbuilding]));
-                    verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(0, 1, 0), colors[currentbuilding]));
-                    verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, heights[currentbuilding], -z), new Vector3(0, 1, 0), colors[currentbuilding]));
 
-                    verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(0, 1, 0), colors[currentbuilding]));
-                    verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, heights[currentbuilding], -z - 1), new Vector3(0, 1, 0), colors[currentbuilding]));
-                    verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, heights[currentbuilding], -z), new Vector3(0, 1, 0), colors[currentbuilding]));
+                    //floor or ceiling
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z), new Vector3(0, 1, 0), new Vector2(currentbuilding * 2 / imagesInTexture, 1)));
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(0, 1, 0), new Vector2((currentbuilding * 2) / imagesInTexture, 0)));
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, heights[currentbuilding], -z), new Vector3(0, 1, 0), new Vector2((currentbuilding * 2 + 1) / imagesInTexture, 1)));
+
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(0, 1, 0), new Vector2((currentbuilding * 2) / imagesInTexture, 0)));
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, heights[currentbuilding], -z - 1), new Vector3(0, 1, 0), new Vector2((currentbuilding * 2 + 1) / imagesInTexture, 0)));
+                    verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, heights[currentbuilding], -z), new Vector3(0, 1, 0), new Vector2((currentbuilding * 2 + 1) / imagesInTexture, 1)));
 
                     if (currentbuilding != 0)
                     {
                         //front wall
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, 0, -z - 1), new Vector3(0, 0, -1), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(0, 0, -1), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, 0, -z - 1), new Vector3(0, 0, -1), colors[currentbuilding]));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, 0, -z - 1), new Vector3(0, 0, -1), new Vector2((currentbuilding * 2) / imagesInTexture, 1)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(0, 0, -1), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 0)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, 0, -z - 1), new Vector3(0, 0, -1), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 1)));
 
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(0, 0, -1), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, 0, -z - 1), new Vector3(0, 0, -1), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, heights[currentbuilding], -z - 1), new Vector3(0, 0, -1), colors[currentbuilding]));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(0, 0, -1), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 0)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, 0, -z - 1), new Vector3(0, 0, -1), new Vector2((currentbuilding * 2) / imagesInTexture, 1)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, heights[currentbuilding], -z - 1), new Vector3(0, 0, -1), new Vector2((currentbuilding * 2) / imagesInTexture, 0)));
 
                         //back wall
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, 0, -z), new Vector3(0, 0, 1), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, 0, -z), new Vector3(0, 0, 1), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z), new Vector3(0, 0, 1), colors[currentbuilding]));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, 0, -z), new Vector3(0, 0, 1), new Vector2((currentbuilding * 2) / imagesInTexture, 1)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, 0, -z), new Vector3(0, 0, 1), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 1)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z), new Vector3(0, 0, 1), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 0)));
 
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z), new Vector3(0, 0, 1), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, heights[currentbuilding], -z), new Vector3(0, 0, 1), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, 0, -z), new Vector3(0, 0, 1), colors[currentbuilding]));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z), new Vector3(0, 0, 1), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 0)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, heights[currentbuilding], -z), new Vector3(0, 0, 1), new Vector2((currentbuilding * 2) / imagesInTexture, 0)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, 0, -z), new Vector3(0, 0, 1), new Vector2((currentbuilding * 2) / imagesInTexture, 1)));
 
                         //left wall
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, 0, -z), new Vector3(-1, 0, 0), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, 0, -z - 1), new Vector3(-1, 0, 0), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(-1, 0, 0), colors[currentbuilding]));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, 0, -z), new Vector3(-1, 0, 0), new Vector2((currentbuilding * 2) / imagesInTexture, 1)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, 0, -z - 1), new Vector3(-1, 0, 0), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 1)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(-1, 0, 0), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 0)));
 
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(-1, 0, 0), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, heights[currentbuilding], -z), new Vector3(-1, 0, 0), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x, 0, -z), new Vector3(-1, 0, 0), colors[currentbuilding]));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z - 1), new Vector3(-1, 0, 0), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 0)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, heights[currentbuilding], -z), new Vector3(-1, 0, 0), new Vector2((currentbuilding * 2) / imagesInTexture, 0)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x, 0, -z), new Vector3(-1, 0, 0), new Vector2((currentbuilding * 2) / imagesInTexture, 1)));
 
                         //right wall
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, 0, -z), new Vector3(1, 0, 0), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, heights[currentbuilding], -z - 1), new Vector3(1, 0, 0), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, 0, -z - 1), new Vector3(1, 0, 0), colors[currentbuilding]));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, 0, -z), new Vector3(1, 0, 0), new Vector2((currentbuilding * 2) / imagesInTexture, 1)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, heights[currentbuilding], -z - 1), new Vector3(1, 0, 0), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 0)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, 0, -z - 1), new Vector3(1, 0, 0), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 1)));
 
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, heights[currentbuilding], -z - 1), new Vector3(1, 0, 0), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, 0, -z), new Vector3(1, 0, 0), colors[currentbuilding]));
-                        verticesList.Add(new VertexPositionColorNormal(new Vector3(x + 1, heights[currentbuilding], -z), new Vector3(1, 0, 0), colors[currentbuilding]));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, heights[currentbuilding], -z - 1), new Vector3(1, 0, 0), new Vector2((currentbuilding * 2 - 1) / imagesInTexture, 0)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, 0, -z), new Vector3(1, 0, 0), new Vector2((currentbuilding * 2) / imagesInTexture, 1)));
+                        verticesList.Add(new VertexPositionNormalTexture(new Vector3(x + 1, heights[currentbuilding], -z), new Vector3(1, 0, 0), new Vector2((currentbuilding * 2) / imagesInTexture, 0)));
                     }
                 }
             }
-            buildingBuffer = new VertexBuffer(device, VertexPositionColorNormal.VertexDeclaration, verticesList.Count, BufferUsage.WriteOnly); buildingBuffer.SetData<VertexPositionColorNormal>(verticesList.ToArray());
+
+            buildingBuffer = new VertexBuffer(device, VertexPositionNormalTexture.VertexDeclaration, verticesList.Count, BufferUsage.WriteOnly);
+
+            buildingBuffer.SetData<VertexPositionNormalTexture>(verticesList.ToArray());
         }
         private void initIndices()
         {
@@ -209,8 +222,10 @@ namespace Cubes
             effect.Parameters["xAmbientLight"].SetValue(LightSettings.AmbientLight);
             effect.Parameters["xAmbientMaterial"].SetValue(LightSettings.AmbientMaterial);
             effect.Parameters["xLightDirection"].SetValue(LightSettings.LightDirection);
+            effect.Parameters["xTexture"].SetValue(texture);
 
-            effect.CurrentTechnique = effect.Techniques["PhongShader"];
+
+            effect.CurrentTechnique = effect.Techniques["PhongTexturedShader"];
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
