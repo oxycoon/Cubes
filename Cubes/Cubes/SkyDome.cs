@@ -11,7 +11,8 @@ namespace Cubes
     {
         private Effect effect;      
         private GraphicsDevice device;      
-        private Texture2D texture;       
+        private Texture2D texture;
+        // SkyDome modelen er hentet fra reimers.
         private Model model;        
         private DepthStencilState dsState;
         private Vector3 scale = new Vector3(2000.0f, 3000.0f, 2000.0f);
