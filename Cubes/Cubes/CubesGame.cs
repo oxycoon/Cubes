@@ -230,6 +230,8 @@ namespace Cubes
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+
+            #region Keyboar logic
             //Oppretter kuber i et tilfeldig sted
             if (input.KeyboardState.IsKeyDown(Keys.T) && input.KeyboardState != oldState)
             {
@@ -251,6 +253,7 @@ namespace Cubes
             {
                 theCubeList.Clear();
             }
+            #endregion
 
             #region Kubenes kollisjonsdeteksjonalgoritme
             foreach (Cube c1 in theCubeList)
