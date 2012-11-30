@@ -181,6 +181,12 @@ namespace Cubes
             model.Draw(matWorld, camera.View, camera.Projection);
         }
 
+        /// <summary>
+        ///     Denne metoden er hentet fra undervisnings dokument på it's learning.
+        /// </summary>
+        /// <param name="originalBoundingSphere"></param>
+        /// <param name="transformationMatrix"></param>
+        /// <returns></returns>
         public static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {
             Vector3 trans;

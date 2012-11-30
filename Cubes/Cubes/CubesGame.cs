@@ -195,8 +195,8 @@ namespace Cubes
             if (input.KeyboardState.IsKeyDown(Keys.T) && input.KeyboardState != oldState)
             {
                 Random rnd = new Random();
-                //Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
-                Cube tmp = new Cube(this, new Vector3(50, 300, 0));
+                Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
+                //Cube tmp = new Cube(this, new Vector3(50, 300, 0));
                 tmp.Model = Content.Load<Model>("Models\\Cube2");
                 this.Components.Add(tmp);
                 theCubeList.Add(tmp);
@@ -360,6 +360,13 @@ namespace Cubes
                 return false;
         }
 
+
+        /// <summary>
+        ///     Denne metoden er hentet fra undervisnings dokument på it's learning.
+        /// </summary>
+        /// <param name="originalBoundingSphere"></param>
+        /// <param name="transformationMatrix"></param>
+        /// <returns></returns>
         private static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {
             Vector3 trans;
@@ -380,6 +387,13 @@ namespace Cubes
 
             return transformedBoundingSphere;
         }
+
+        /// <summary>
+        ///     Denne metoden er hentet fra undervisnings dokument på it's learning.
+        /// </summary>
+        /// <param name="originalBoundingSphere"></param>
+        /// <param name="transformationMatrix"></param>
+        /// <returns></returns>
 
         private static BoundingBox TransformBoundingBox(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {
