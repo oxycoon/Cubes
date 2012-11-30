@@ -17,6 +17,7 @@ namespace Cubes
     /// </summary>
     public class Camera : Microsoft.Xna.Framework.GameComponent
     {
+        #region Veriables
         private GraphicsDeviceManager graphics;
         private GraphicsDevice device;
         private IInputHandler input;
@@ -40,15 +41,11 @@ namespace Cubes
         private int mouseX, mouseY, mouseLockedX, mouseLockedY;
         private bool lockedCamera = true;
 
-        public bool LockedCamera
-        {
-            get { return lockedCamera; }
-            set { lockedCamera = value; }
-        }
-        private Game game;
-
         private KeyboardState oldState;
         private int oldMouseScroll;
+
+        private Game game;
+        #endregion
 
         #region Get/Set methods
         public float CamZoom
@@ -84,6 +81,13 @@ namespace Cubes
             get { return view; }
             set { view = value; }
         }
+
+        public bool LockedCamera
+        {
+            get { return lockedCamera; }
+            set { lockedCamera = value; }
+        }
+
         #endregion
 
         public Camera(Game game)

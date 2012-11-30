@@ -17,15 +17,26 @@ namespace Cubes
     /// </summary>
     public class Hook : Microsoft.Xna.Framework.GameComponent
     {
+        #region Variables
         private Matrix world;
+        private Matrix[] meshMatrix;
+        private Boolean active = false;
+        private Boolean hasBlock = false;
+        private Model model;
+        private Model theWireModel;
+        private IInputHandler input;
+        //private double altitude;
+        private bool isHooked;
+        private KeyboardState oldState;
+        //private Matrix world, view, projection;
+        #endregion
 
+        #region Get/Set
         public Matrix World
         {
             get { return world; }
             set { world = value; }
         }
-
-        private Matrix[] meshMatrix;
 
         public Matrix[] MeshMatrix
         {
@@ -33,26 +44,18 @@ namespace Cubes
             set { meshMatrix = value; }
         }
 
-        private Boolean active = false;
-        private Boolean hasBlock = false;
-
         public Boolean HasBlock
         {
             get { return hasBlock; }
             set { hasBlock = value; }
         }
 
-
-
         public Boolean Active
         {
             get { return active; }
             set { active = value; }
         }
-        private Model model;
-        private Model theWireModel;
-        private IInputHandler input;
-
+       
         private Vector3 position;
 
         public Vector3 Position
@@ -88,17 +91,13 @@ namespace Cubes
             set { theWireModel = value; }
         }
 
-        //private double altitude;
-        private bool isHooked;
-        private KeyboardState oldState;
-        //private Matrix world, view, projection;
-
         public Hook(Game game)
             : base(game)
         {
             // TODO: Construct any child components here
             input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
         }
+#endregion
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting

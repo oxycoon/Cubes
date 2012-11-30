@@ -16,6 +16,7 @@ namespace Cubes
     /// </summary>
     public class CubesGame : Microsoft.Xna.Framework.Game
     {
+        #region Variables
         GraphicsDeviceManager graphics;
         GraphicsDevice device;
         SpriteBatch spriteBatch;
@@ -51,6 +52,7 @@ namespace Cubes
 
         private bool isFullScreen = false;
         //private bool activatedMagnet = false;
+        #endregion
 
         public CubesGame()
         {
@@ -100,8 +102,6 @@ namespace Cubes
             base.Initialize();
         }
 
-
-
         #region Initialize methods
         private void initDevice()
         {
@@ -118,7 +118,6 @@ namespace Cubes
             //Initialiserer Effect-objektet:
         }
         #endregion
-
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -347,6 +346,14 @@ namespace Cubes
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// checkCubeCollision check wheter the cubes collide.
+        /// True: the cubes collide
+        /// False: the cubes do not collide.
+        /// </summary>
+        /// <param name="cube1"></param>
+        /// <param name="cube2"></param>
+        /// <returns></returns>
         private bool checkCubeCollision(Cube cube1, Cube cube2)
         {
             BoundingBox cube1Sphere = TransformBoundingBox((BoundingSphere)cube1.Model.Tag, cube1.World);
@@ -358,6 +365,13 @@ namespace Cubes
                 return false;
         }
 
+        /// <summary>
+        /// checkHookCubeCollision checks wheter the magnet collides with a cube.
+        /// True: the magnet collides with a cube
+        /// False: the manget does not collide with a cube
+        /// </summary>
+        /// <param name="cube"></param>
+        /// <returns></returns>
         private bool checkHookCubeCollision(Cube cube)
         {
             BoundingSphere hookSphere = TransformBoundingSphere((BoundingSphere)theHook.Model.Tag, theHook.World);
@@ -403,7 +417,6 @@ namespace Cubes
         /// <param name="originalBoundingSphere"></param>
         /// <param name="transformationMatrix"></param>
         /// <returns></returns>
-
         private static BoundingBox TransformBoundingBox(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {
             Vector3 trans;

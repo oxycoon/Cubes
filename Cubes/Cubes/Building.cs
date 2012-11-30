@@ -20,6 +20,7 @@ namespace Cubes
     /// </summary>
     public class Building : Microsoft.Xna.Framework.GameComponent
     {
+        #region Variables
         private Effect effect;
         private GraphicsDevice device;
 
@@ -28,6 +29,7 @@ namespace Cubes
         private int[] heights;
         private Color[] colors;
         private VertexBuffer buildingBuffer;
+        #endregion
 
         #region Get/sets
         public Effect Effect
@@ -83,7 +85,6 @@ namespace Cubes
             initIndices();
             initVertices();
         }
-
         private void initVertices()
         {
             int differentBuildings = heights.Length - 1;
@@ -149,7 +150,6 @@ namespace Cubes
             }
             buildingBuffer = new VertexBuffer(device, VertexPositionColorNormal.VertexDeclaration, verticesList.Count, BufferUsage.WriteOnly); buildingBuffer.SetData<VertexPositionColorNormal>(verticesList.ToArray());
         }
-
         private void initIndices()
         {
             indices = new int[,]
@@ -183,7 +183,6 @@ namespace Cubes
                     if (indices[x, y] == 1)
                         indices[x, y] = random.Next(differentBuildings) + 1;
         }
-
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -194,7 +193,6 @@ namespace Cubes
 
             base.Update(gameTime);
         }
-
         public void Draw()
         {
             RasterizerState rs = new RasterizerState();
