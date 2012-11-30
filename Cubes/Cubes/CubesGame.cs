@@ -25,7 +25,7 @@ namespace Cubes
         private Hook theHook;
         private Terrain theTerrain;
         private List<Cube> theCubeList = new List<Cube>();
-        private SmokeEffect theSmokeEffect;
+        public static SmokeEffect theSmokeEffect;
         private InputHandler input;
         private Camera theCamera;
         private SkyDome theSky;
@@ -203,8 +203,8 @@ namespace Cubes
             if (input.KeyboardState.IsKeyDown(Keys.T) && input.KeyboardState != oldState)
             {
                 Random rnd = new Random();
-                Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
-                //Cube tmp = new Cube(this, new Vector3(50, 300, 0));
+                //Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
+                Cube tmp = new Cube(this, new Vector3(50, 300, 0));
                 tmp.Model = Content.Load<Model>("Models\\Cube2");
                 this.Components.Add(tmp);
                 theCubeList.Add(tmp);
