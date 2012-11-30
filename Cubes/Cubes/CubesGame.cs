@@ -25,7 +25,7 @@ namespace Cubes
         private Hook theHook;
         private Terrain theTerrain;
         private List<Cube> theCubeList = new List<Cube>();
-        private SmokeEffect theSmokeEffect;
+        public static SmokeEffect theSmokeEffect;
         private InputHandler input;
         private Camera theCamera;
         private SkyDome theSky;
@@ -369,6 +369,13 @@ namespace Cubes
                 return false;
         }
 
+
+        /// <summary>
+        ///     Denne metoden er hentet fra undervisnings dokument på it's learning.
+        /// </summary>
+        /// <param name="originalBoundingSphere"></param>
+        /// <param name="transformationMatrix"></param>
+        /// <returns></returns>
         private static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {
             Vector3 trans;
@@ -389,6 +396,13 @@ namespace Cubes
 
             return transformedBoundingSphere;
         }
+
+        /// <summary>
+        ///     Denne metoden er hentet fra undervisnings dokument på it's learning.
+        /// </summary>
+        /// <param name="originalBoundingSphere"></param>
+        /// <param name="transformationMatrix"></param>
+        /// <returns></returns>
 
         private static BoundingBox TransformBoundingBox(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {

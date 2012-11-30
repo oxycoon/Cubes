@@ -31,6 +31,7 @@ namespace Cubes
         private Matrix[] meshMatrix;
         private Vector3 cubePosition;
 
+
         #region Get/Sets
         public Boolean Move
         {
@@ -148,6 +149,9 @@ namespace Cubes
                 {
                     position.Y = 0;
                     fallSpeed = 0;
+                    CubesGame.theSmokeEffect.addExplotion(new Vector3(world.Translation.X, world.Translation.Y, world.Translation.Z));
+                    CubesGame.theSmokeEffect.addExplotion(new Vector3(world.Translation.X, world.Translation.Y, world.Translation.Z));
+                    CubesGame.theSmokeEffect.addExplotion(new Vector3(world.Translation.X, world.Translation.Y, world.Translation.Z));
                     move = false;
                 }
             }
@@ -181,6 +185,12 @@ namespace Cubes
             model.Draw(matWorld, camera.View, camera.Projection);
         }
 
+        /// <summary>
+        ///     Denne metoden er hentet fra undervisnings dokument på it's learning.
+        /// </summary>
+        /// <param name="originalBoundingSphere"></param>
+        /// <param name="transformationMatrix"></param>
+        /// <returns></returns>
         public static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {
             Vector3 trans;
