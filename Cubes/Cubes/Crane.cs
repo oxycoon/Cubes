@@ -93,12 +93,12 @@ namespace Cubes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
-
+            //Roterer kranen med klokken 
             if (input.KeyboardState.IsKeyDown(Keys.Right) || input.KeyboardState.IsKeyDown(Keys.D))
             {
                 rotation -= 0.03f;
             }
+            //Roterer kranen med klokken
             if (input.KeyboardState.IsKeyDown(Keys.Left) || input.KeyboardState.IsKeyDown(Keys.A))
             {
                 rotation += 0.03f;
@@ -118,11 +118,10 @@ namespace Cubes
         {
             Matrix matY, matTrans, matScale;
 
+            //Transformerer krana.
             matY = Matrix.CreateRotationY(rotation);
             matTrans = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
             matScale = Matrix.CreateScale(0.01f);
-
-            //isrot, identify, scale, rotation, orbit, translation
             world = matScale * matY * matTrans;
 
             effect.CurrentTechnique = effect.Techniques["PhongTexturedShader"];
@@ -134,6 +133,7 @@ namespace Cubes
             {
                 foreach (Effect currentEffect in mm.Effects)
                 {
+                    // Setter alle parameterene til effekten.
                     currentEffect.CurrentTechnique = effect.CurrentTechnique;
                     currentEffect.Parameters["xWorld"].SetValue(modelTransformations[mm.ParentBone.Index] * world);
                     currentEffect.Parameters["xView"].SetValue(camera.View);
@@ -145,6 +145,7 @@ namespace Cubes
                     currentEffect.Parameters["xAmbientMaterial"].SetValue(LightSettings.AmbientMaterial);
                     currentEffect.Parameters["xLightDirection"].SetValue(LightSettings.LightDirection);
 
+                    //Sjekker hvilken del av krana, setter så teksturen til elementet.
                     if (mm.Name.Equals("Weight"))
                         currentEffect.Parameters["xTexture"].SetValue(theWeightTexture);
                     else if (mm.Name.Equals("Base"))
@@ -157,9 +158,6 @@ namespace Cubes
                 
                 mm.Draw();
             }
-
-
-            //theCraneModel.Draw(world, camera.View, camera.Projection);
 
             return world;
         }
