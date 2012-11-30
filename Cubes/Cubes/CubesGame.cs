@@ -25,6 +25,7 @@ namespace Cubes
         private Hook theHook;
         private Terrain theTerrain;
         private List<Cube> theCubeList = new List<Cube>();
+        private SmokeEffect theSmokeEffect;
         private InputHandler input;
         private Camera theCamera;
         private SkyDome theSky;
@@ -76,6 +77,9 @@ namespace Cubes
 
             theCity = new Building(this);
             this.Components.Add(theCity);
+
+            theSmokeEffect = new SmokeEffect(this);
+            this.Components.Add(theSmokeEffect);
 
         }
 
@@ -158,6 +162,10 @@ namespace Cubes
             magnetIcon = Content.Load<Texture2D>("Sprites\\magnetPower");
             camLock = Content.Load<Texture2D>("Sprites\\camLock");
 
+            // Smoky
+            theSmokeEffect.graphicsDevice = graphics.GraphicsDevice;
+            theSmokeEffect.explosionEffect = Content.Load<Effect>("Particle"); ;
+            theSmokeEffect.explosionTexture = Content.Load<Texture2D>("Textures\\MC_Dirt");
         }
 
         private Model LoadModel(String name)
@@ -282,6 +290,7 @@ namespace Cubes
             theTerrain.Draw(gameTime, effect, device);
             theCity.Draw();
             theSky.Draw(view, projection);
+            theSmokeEffect.Draw(theCamera, device);
 
             device.BlendState = BlendState.AlphaBlend;
             matrixStack.Push(theCrane.Draw(gameTime, theCamera, world));
