@@ -131,50 +131,72 @@ namespace Cubes
             // TODO: use this.Content to load your game content here
             effect = Content.Load<Effect>("MyEffect");
             spriteFont = Content.Load<SpriteFont>("font");
-
+            #region Kran
             theCrane.Model = LoadModel("Models\\Crane");
             theCrane.CraneTexture = Content.Load<Texture2D>("Textures\\Texture_Crane");
             theCrane.WeightTexture = Content.Load<Texture2D>("Textures\\Concrete");
             theCrane.BaseTexture = Content.Load<Texture2D>("Textures\\Concrete");
             theCrane.WireTexture = Content.Load<Texture2D>("Textures\\SupportWire");
+            theCrane.Effect = effect;
+            #endregion
 
-            theHook.Model = Content.Load<Model>("Models\\Hook");
+            #region Magnet
+            theHook.Model = LoadModel("Models\\Hook");
             theHook.WireModel = Content.Load<Model>("Models\\Wire");
+            theHook.Effect = effect;
+            theHook.MagnetTexture = Content.Load<Texture2D>("Textures\\pic2");
+            theHook.WireTexture = Content.Load<Texture2D>("Textures\\Cable");
+            #endregion
 
+            #region Skydome
             theSky.Model = Content.Load<Model>("Models\\dome");
             theSky.Texture = Content.Load<Texture2D>("Textures\\clouds2");
-            theCity.Texture = Content.Load<Texture2D>("Textures\\texturemap");
-
-            theTerrain.Texture = Content.Load<Texture2D>("Textures\\MC_Dirt");
-
-            theCrane.Effect = effect;
             theSky.Device = device;
             theSky.Effect = effect;
+            #endregion
 
+            #region Terreng
+            theTerrain.Texture = Content.Load<Texture2D>("Textures\\MC_Dirt");
+            #endregion
+
+            #region By
+            theCity.Texture = Content.Load<Texture2D>("Textures\\texturemap");
             theCity.Effect = effect;
             theCity.Device = device;
             theCity.initElements();
+            #endregion
 
+            #region HUD-elementer
             hudFont = Content.Load<SpriteFont>("font");
             hudDrawer = new SpriteBatch( graphics.GraphicsDevice );
+            #endregion
 
+            #region Load sprites
             boxIcon = Content.Load<Texture2D>("Sprites\\boxCarry");
             magnetIcon = Content.Load<Texture2D>("Sprites\\magnetPower");
             camLock = Content.Load<Texture2D>("Sprites\\camLock");
+            #endregion
 
-            // Smoky
+            #region Partikkeleffect
             theSmokeEffect.graphicsDevice = graphics.GraphicsDevice;
             theSmokeEffect.explosionEffect = Content.Load<Effect>("Particle"); ;
-            theSmokeEffect.explosionTexture = Content.Load<Texture2D>("Textures\\MC_Dirt");
+            theSmokeEffect.explosionTexture = Content.Load<Texture2D>("Textures\\Dirt");
+            #endregion
         }
 
+        /// <summary>
+        /// Laster inn modellen mens den setter alle meshenes effekt til spillets
+        /// effect.
+        /// </summary>
+        /// <param name="name">String til resursen</param>
+        /// <returns>Ferdige modellen</returns>
         private Model LoadModel(String name)
         {
             Model newModel = Content.Load<Model>(name);
 
             foreach (ModelMesh mesh in newModel.Meshes)
                 foreach (ModelMeshPart meshPart in mesh.MeshParts)
-                    meshPart.Effect = effect;
+                    meshPart.Effect = effect; 
             return newModel;
         }
 
@@ -197,21 +219,20 @@ namespace Cubes
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
-            // TODO: Add your update logic here
-
+            //Oppretter kuber i et tilfeldig sted
             if (input.KeyboardState.IsKeyDown(Keys.T) && input.KeyboardState != oldState)
             {
                 Random rnd = new Random();
-                //Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)));
-                Cube tmp = new Cube(this, new Vector3(50, 300, 0));
-                tmp.Model = Content.Load<Model>("Models\\Cube2");
+                Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)), effect);
+                //Cube tmp = new Cube(this, new Vector3(50, 300, 0), effect);
+                tmp.Texture = Content.Load<Texture2D>("Textures\\box_d");
+                tmp.Model = LoadModel("Models\\Cube2");
                 this.Components.Add(tmp);
                 theCubeList.Add(tmp);
-       
+
             }
 
-
+            #region Kubenes kollisjonsdeteksjonalgoritme
             foreach (Cube c1 in theCubeList)
             {
                 List<Cube> collideList = new List<Cube>();
@@ -265,6 +286,7 @@ namespace Cubes
                     }
                 }
             }
+            #endregion
 
             oldState = input.KeyboardState;
             base.Update(gameTime);

@@ -27,7 +27,6 @@ namespace Cubes
         private int[,] indices;
 
         private int[] heights;
-        private Color[] colors;
         private VertexBuffer buildingBuffer;
 
         private Texture2D texture;
@@ -56,16 +55,14 @@ namespace Cubes
             : base(game)
         {
             // TODO: Construct any child components here
-            heights = new int[] { 0, 60, 75, 40, 80, 120, 105, 90, 110};
-            colors = new Color[] { Color.Blue, Color.Yellow, Color.Red, Color.Red, Color.Blue, Color.Brown, Color.Purple, Color.Red, Color.Green};
+            heights = new int[] { 0, 75, 60, 120, 105, 160};
         }
 
-        public Building(Game game, Color[] colors, int[] heights, Effect effect, GraphicsDevice device)
+        public Building(Game game, int[] heights, Effect effect, GraphicsDevice device)
             : base(game)
         {
             // TODO: Construct any child components here
             this.heights = heights;
-            this.colors = colors;
             this.device = device;
             this.effect = effect;
         }
@@ -76,8 +73,7 @@ namespace Cubes
             this.effect = effect;
 
             heights = new int[] { 0, 60, 75, 40, 80, 120, 105, 30, 110};
-            colors = new Color[] { Color.Blue, Color.Yellow, Color.Red, Color.Red, Color.Blue, Color.Brown, Color.White, Color.Red};
-        }
+       }
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
@@ -85,14 +81,21 @@ namespace Cubes
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
             base.Initialize();
         }
+
+        /// <summary>
+        /// Initialiserer elementene
+        /// </summary>
         public void initElements()
         {
             initIndices();
             initVertices();
         }
+
+        /// <summary>
+        /// Initialiserer verteksene
+        /// </summary>
         private void initVertices()
         {
             int differentBuildings = heights.Length - 1;
@@ -163,8 +166,13 @@ namespace Cubes
 
             buildingBuffer.SetData<VertexPositionNormalTexture>(verticesList.ToArray());
         }
+
+        /// <summary>
+        /// Initialiserer indexene
+        /// </summary>
         private void initIndices()
         {
+            // "Byplanen", 1 er bygninger, 0 er flatt. Byen er no 20x20.
             indices = new int[,]
             {
                 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -196,6 +204,7 @@ namespace Cubes
                     if (indices[x, y] == 1)
                         indices[x, y] = random.Next(differentBuildings) + 1;
         }
+
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -206,6 +215,10 @@ namespace Cubes
 
             base.Update(gameTime);
         }
+
+        /// <summary>
+        /// Tegner byen.
+        /// </summary>
         public void Draw()
         {
             RasterizerState rs = new RasterizerState();

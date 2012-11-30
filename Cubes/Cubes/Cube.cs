@@ -17,7 +17,7 @@ namespace Cubes
     /// </summary>
     public class Cube : Microsoft.Xna.Framework.GameComponent
     {
-        #region Veriables
+        #region Variabler
         private Matrix world, view, projection;
         private Boolean hooked = false;
         private Boolean move = true;
@@ -28,12 +28,21 @@ namespace Cubes
         private Model model;
         private Texture texture;
         private IInputHandler input;
+        private Effect effect;
+
+
 
         private Matrix[] meshMatrix;
         private Vector3 cubePosition;
         #endregion
 
         #region Get/Sets
+        public Effect Effect
+        {
+            get { return effect; }
+            set { effect = value; }
+        }
+
         public Boolean Move
         {
             get { return move; }
@@ -128,12 +137,13 @@ namespace Cubes
         /// </summary>
         /// <param name="game">Spillet</param>
         /// <param name="position">Kubens posisjon</param>
-        public Cube(Game game, Vector3 position)
+        public Cube(Game game, Vector3 position, Effect effect)
             : base(game)
         {
             // TODO: Construct any child components here
             input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
             this.position = position;
+            this.effect = effect;
         }
 
         /// <summary>
@@ -200,7 +210,37 @@ namespace Cubes
 
             this.world = matWorld;
 
-            model.Draw(matWorld, camera.View, camera.Projection);
+            effect.CurrentTechnique = effect.Techniques["PhongTexturedShader"];
+
+            Matrix[] modelTransformations = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(modelTransformations);
+
+            foreach (ModelMesh mm in model.Meshes)
+            {
+                foreach (Effect currentEffect in mm.Effects)
+                {
+                    // Setter alle parameterene til effekten.
+                    currentEffect.CurrentTechnique = effect.CurrentTechnique;
+                    currentEffect.Parameters["xWorld"].SetValue(modelTransformations[mm.ParentBone.Index] * matWorld);
+                    currentEffect.Parameters["xView"].SetValue(camera.View);
+                    currentEffect.Parameters["xProjection"].SetValue(camera.Projection);
+                    currentEffect.Parameters["xEnableLightingTexture"].SetValue(true);
+                    currentEffect.Parameters["xDiffuseLight"].SetValue(LightSettings.DiffuseLight);
+                    currentEffect.Parameters["xDiffuseMaterial"].SetValue(LightSettings.DiffuseMaterial);
+                    currentEffect.Parameters["xAmbientLight"].SetValue(LightSettings.AmbientLight);
+                    currentEffect.Parameters["xAmbientMaterial"].SetValue(LightSettings.AmbientMaterial);
+                    currentEffect.Parameters["xLightDirection"].SetValue(LightSettings.LightDirection);
+
+
+                    currentEffect.Parameters["xTexture"].SetValue(texture);
+                   
+                }
+                mm.Draw();
+            }
+
+
+
+            //model.Draw(matWorld, camera.View, camera.Projection);
         }
 
         /// <summary>

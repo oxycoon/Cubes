@@ -25,13 +25,36 @@ namespace Cubes
 
         private Model model;
         private Model theWireModel;
+
+        private Texture2D magnetTexture;
+        private Texture2D wireTexture;
         
         private Vector3 position;
 
         private KeyboardState oldState;
         private IInputHandler input;
 
+        private Effect effect;
+
         #region Get/Set
+        public Texture2D WireTexture
+        {
+            get { return wireTexture; }
+            set { wireTexture = value; }
+        }
+
+        public Texture2D MagnetTexture
+        {
+            get { return magnetTexture; }
+            set { magnetTexture = value; }
+        }
+
+        public Effect Effect
+        {
+            get { return effect; }
+            set { effect = value; }
+        }
+
         public Matrix World
         {
             get { return world; }
@@ -152,8 +175,8 @@ namespace Cubes
             #endregion
             #region Restriction logic
             //Sjekker om magneten er for langt nede
-            if (position.Y > 75.0f)
-                position.Y = 75.0f;
+            if (position.Y > 67.0f)
+                position.Y = 67.0f;
             //Sjekker om magneten er for langt oppe
             if (position.Y < 0.0f)
                 position.Y = 0.0f;
@@ -194,7 +217,36 @@ namespace Cubes
 
             world = hookWorld;
 
-            model.Draw(hookWorld, camera.View, camera.Projection);
+            effect.CurrentTechnique = effect.Techniques["PhongTexturedShader"];
+
+            Matrix[] modelTransformations = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(modelTransformations);
+
+            #region Magnet foreach
+            foreach (ModelMesh mm in model.Meshes)
+            {
+                foreach (Effect currentEffect in mm.Effects)
+                {
+                    // Setter alle parameterene til effekten.
+                    currentEffect.CurrentTechnique = effect.CurrentTechnique;
+                    currentEffect.Parameters["xWorld"].SetValue(modelTransformations[mm.ParentBone.Index] * hookWorld);
+                    currentEffect.Parameters["xView"].SetValue(camera.View);
+                    currentEffect.Parameters["xProjection"].SetValue(camera.Projection);
+                    currentEffect.Parameters["xEnableLightingTexture"].SetValue(true);
+                    currentEffect.Parameters["xDiffuseLight"].SetValue(LightSettings.DiffuseLight);
+                    currentEffect.Parameters["xDiffuseMaterial"].SetValue(LightSettings.DiffuseMaterial);
+                    currentEffect.Parameters["xAmbientLight"].SetValue(LightSettings.AmbientLight);
+                    currentEffect.Parameters["xAmbientMaterial"].SetValue(LightSettings.AmbientMaterial);
+                    currentEffect.Parameters["xLightDirection"].SetValue(LightSettings.LightDirection);
+
+
+                    currentEffect.Parameters["xTexture"].SetValue(magnetTexture);
+
+                }
+                mm.Draw();
+            }
+            #endregion
+
             theWireModel.Draw(wireWorld, camera.View, camera.Projection);
 
             return hookWorld;
