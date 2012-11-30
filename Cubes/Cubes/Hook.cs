@@ -156,17 +156,17 @@ namespace Cubes
                 position.X -= 1.0f;
             }
             //Beveger kroken (og vaieren) ned.
-            if (input.KeyboardState.IsKeyDown(Keys.R))
+            if (input.KeyboardState.IsKeyDown(Keys.R)|| input.KeyboardState.IsKeyDown(Keys.LeftShift))
             {
                 position.Y -= 1.0f;
             }
             //Beveger kroken (og vaieren) opp.
-            if (input.KeyboardState.IsKeyDown(Keys.F))
+            if (input.KeyboardState.IsKeyDown(Keys.F) || input.KeyboardState.IsKeyDown(Keys.LeftControl))
             {
                 position.Y += 1.0f;
             }
             //Skrur av/p� magneten, hvis den har en blokk slipper den blokken
-            if (checkKeyState(Keys.X))
+            if (checkKeyState(Keys.X) || checkKeyState(Keys.Space))
             {
                 active = !active;
                 if (hasBlock)

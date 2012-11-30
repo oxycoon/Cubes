@@ -5,6 +5,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+// Denne filen er blåkopi av Partikkelgenerator (uke 44 2012) pdf på fagets side på its
+// Lenking umulig fordi its suger
+
 namespace Cubes
 {
     struct Particle

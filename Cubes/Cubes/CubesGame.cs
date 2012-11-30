@@ -54,9 +54,9 @@ namespace Cubes
         #region HelpString
         private String helpString = "Use mouse to rotate camera. Mouse wheel to zoom camera.\n" +
                                     "Turn crane using A/D or Left/Right Arrow.\n" +
-                                    "Move magnet on crane using W/S.\n" +
-                                    "Move magnet up and down using R/F.\n" +
-                                    "Turn on/off magnet using X \n"+
+                                    "Move magnet along the crane using W/S.\n" +
+                                    "Move magnet up and down using R/F or Left Shift/Ctrl.\n" +
+                                    "Turn on/off magnet using X or Spacebar \n"+
                                     "Lock/unlock camera using C \n" +
                                     "Spawn crates using T \n" +
                                     "Clear boxes using Y \n" +

@@ -147,7 +147,7 @@ namespace Cubes
 
                     #endregion
                     
-                    float textureSpan = 150.0f;
+                    float textureSpan = 300.0f;
                     float textureStart = 0.0f;
                     float textureSteps = 1.0f;
                     //-1 + (((x mod 4)/2) *2)
