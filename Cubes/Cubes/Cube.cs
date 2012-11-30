@@ -72,6 +72,11 @@ namespace Cubes
             set { texture = value; }
         }
 
+        /// <summary>
+        /// Get/Set for modellen til kuben
+        /// 
+        /// Set-metoden vil også opprette BoundingSphere og legge den i modellens tag.
+        /// </summary>
         public Model Model
         {
             get { return model; }
@@ -107,6 +112,10 @@ namespace Cubes
 
         #endregion
 
+        /// <summary>
+        /// Standardkonstruktør for kuben
+        /// </summary>
+        /// <param name="game">Spillet</param>
         public Cube(Game game)
             : base(game)
         {
@@ -114,6 +123,11 @@ namespace Cubes
             input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
         }
 
+        /// <summary>
+        /// Konstruktør for kube med gitt posisjon.
+        /// </summary>
+        /// <param name="game">Spillet</param>
+        /// <param name="position">Kubens posisjon</param>
         public Cube(Game game, Vector3 position)
             : base(game)
         {
@@ -160,17 +174,20 @@ namespace Cubes
             base.Update(gameTime);
         }
 
-        public void Draw(Matrix world, Camera camera, float craneRotation)
+        /// <summary>
+        /// Tegner kuben
+        /// </summary>
+        /// <param name="world">Verdensmatrisen kuben skal tegnes i dersom den er plukket opp</param>
+        /// <param name="camera">Spillets kamera</param>
+        public void Draw(Matrix world, Camera camera)
         {
-            // ISROT
-            Matrix matWorld, matCubeTrans, matCubeOrbit, matScale;
+            Matrix matWorld, matCubeTrans, matScale;
             
             matWorld = Matrix.Identity;
             if (hooked)
             {
                 matScale = Matrix.CreateScale(5.0f);
-                matCubeTrans = Matrix.CreateTranslation(new Vector3(0.0f, -65.0f, 0.0f));
-                //matCubeOrbit = matCubeTrans * Matrix.CreateRotationY(craneRotation);             
+                matCubeTrans = Matrix.CreateTranslation(new Vector3(0.0f, -65.0f, 0.0f));            
                 matWorld = matScale * matCubeTrans * world;
                 
             }
@@ -187,10 +204,13 @@ namespace Cubes
         }
 
         /// <summary>
-        ///     Denne metoden er hentet fra undervisnings dokument på it's learning.
+        /// Finner den transformerte BoundingSpheren
+        /// 
+        /// Denne metoden er hentet fra undervisnings dokument på it's learning.
+        /// Er kopiert og tilpasset i andre klasser.
         /// </summary>
-        /// <param name="originalBoundingSphere"></param>
-        /// <param name="transformationMatrix"></param>
+        /// <param name="originalBoundingSphere">Den opprinnelige BoundingSphera til objektet</param>
+        /// <param name="transformationMatrix">Transformasjonsmatrisa til objektet</param>
         /// <returns></returns>
         public static BoundingSphere TransformBoundingSphere(BoundingSphere originalBoundingSphere, Matrix transformationMatrix)
         {

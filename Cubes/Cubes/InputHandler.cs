@@ -12,10 +12,12 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Cubes
 {
+    /// <summary>
+    /// InputHandler interface som lar brukeren hente ut nødvendige states.
+    /// </summary>
     public interface IInputHandler
     {
         KeyboardState KeyboardState { get; }
-        MouseState MouseState { get; }
     };
 
     /// <summary>
@@ -27,12 +29,6 @@ namespace Cubes
         public KeyboardState KeyboardState
         {
             get { return (keyboardState); }
-        }
-
-        private MouseState mouseState;
-        public MouseState MouseState
-        {
-            get { return (mouseState); }
         }
 
         public InputHandler(Game game)
@@ -55,19 +51,18 @@ namespace Cubes
 
         /// <summary>
         /// Allows the game component to update itself.
+        /// 
+        /// Escape for å avlslutte spillet.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
-
             keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Escape))
             {
                 Game.Exit();
             }
-
             base.Update(gameTime);
         }
     }
