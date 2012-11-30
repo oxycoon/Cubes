@@ -13,6 +13,7 @@ namespace Cubes
     /// </summary>
     public class SmokeEffect : Microsoft.Xna.Framework.GameComponent
     {
+        private IInputHandler input;
 
         //Randomness 
         public Random rnd { get; protected set; }
@@ -31,6 +32,7 @@ namespace Cubes
             : base(game)
         {
             rnd = new Random();
+            input = (IInputHandler)Game.Services.GetService(typeof(IInputHandler));
         }
 
 
@@ -47,9 +49,8 @@ namespace Cubes
 
         protected void UpdateExplosions(GameTime gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.B)) //Bang!! 
-                this.addExplotion(new Vector3(0.0f, 0.0f, 0.0f));
+            if (input.KeyboardState.IsKeyDown(Keys.B)) //Bang!! 
+                this.addExplotion(new Vector3(100.0f, 100.0f, 0.0f));
             // Loop through and update explosions 
             for (int i = 0; i < explosions.Count; ++i)
             {

@@ -288,7 +288,7 @@ namespace Cubes
             effect.Parameters["xView"].SetValue(view);
 
             theTerrain.Draw(gameTime, effect, device);
-            theCity.Draw();
+            //theCity.Draw();
             theSky.Draw(view, projection);
             theSmokeEffect.Draw(theCamera, device);
 
