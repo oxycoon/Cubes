@@ -224,6 +224,7 @@ namespace Cubes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            #region Keyboard input
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
@@ -233,7 +234,8 @@ namespace Cubes
                 Random rnd = new Random();
                 Cube tmp = new Cube(this, new Vector3(rnd.Next(-70, 70), rnd.Next(-70, 70), rnd.Next(-70, 70)), effect);
                 //Cube tmp = new Cube(this, new Vector3(50, 300, 0), effect);
-                tmp.Texture = Content.Load<Texture2D>("Textures\\box_d");
+                tmp.TextureSide = Content.Load<Texture2D>("Textures\\Cube-side");
+                tmp.TextureTop = Content.Load<Texture2D>("Textures\\Cube-topbottom");
                 tmp.Model = LoadModel("Models\\Cube2");
                 this.Components.Add(tmp);
                 theCubeList.Add(tmp);
@@ -243,6 +245,7 @@ namespace Cubes
             {
                 showHelp = !showHelp;
             }
+            #endregion
 
             #region Kubenes kollisjonsdeteksjonalgoritme
             foreach (Cube c1 in theCubeList)
@@ -321,6 +324,7 @@ namespace Cubes
             effect.Parameters["xProjection"].SetValue(projection);
             effect.Parameters["xView"].SetValue(view);
 
+            #region Modeltegning
             theTerrain.Draw(gameTime, effect, device);
             theCity.Draw();
             theSky.Draw(view, projection);
@@ -334,10 +338,9 @@ namespace Cubes
             {
                 c.Draw(matrixStack.Peek(), theCamera);
             }
-
-
             matrixStack.Pop();
             matrixStack.Pop();
+            #endregion
 
             #region SpriteBatch
             dsState = new DepthStencilState();

@@ -26,7 +26,7 @@ namespace Cubes
         private Vector3 scale;
 
         private Model model;
-        private Texture texture;
+        private Texture textureSide, textureTop;
         private IInputHandler input;
         private Effect effect;
 
@@ -74,10 +74,16 @@ namespace Cubes
             set { meshMatrix = value; }
         }
 
-        public Texture Texture
+        public Texture TextureSide
         {
-            get { return texture; }
-            set { texture = value; }
+            get { return textureSide; }
+            set { textureSide = value; }
+        }
+
+        public Texture TextureTop
+        {
+            get { return textureTop; }
+            set { textureTop = value; }
         }
 
         /// <summary>
@@ -230,9 +236,10 @@ namespace Cubes
                     currentEffect.Parameters["xAmbientMaterial"].SetValue(LightSettings.AmbientMaterial);
                     currentEffect.Parameters["xLightDirection"].SetValue(LightSettings.LightDirection);
 
-
-                    currentEffect.Parameters["xTexture"].SetValue(texture);
-                   
+                    if (mm.Name.Equals("Box"))
+                        currentEffect.Parameters["xTexture"].SetValue(textureSide);
+                    else
+                        currentEffect.Parameters["xTexture"].SetValue(textureTop);
                 }
                 mm.Draw();
             }
